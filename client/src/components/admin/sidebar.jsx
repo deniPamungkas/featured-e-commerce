@@ -94,7 +94,7 @@ SideMenu.propTypes = {
 
 AdminSidebar.propTypes = {
   openSide: proptypes.bool,
-  setOpenSide: proptypes.func,
+  setOpenSide: proptypes.any,
 };
 
 export default AdminSidebar;
