@@ -1,14 +1,14 @@
 import { Navigate, useLocation } from "react-router-dom";
 import proptypes from "prop-types";
 
-const CheckAuth = ({ isAuthenticated, user, children }) => {
+const CheckAuth = ({ isAuthenticated, user, children, isLoading }) => {
   const location = useLocation();
 
-  if (!isAuthenticated && location.pathname.includes("admin")) {
+  if (!isAuthenticated && location.pathname.includes("admin") && !isLoading) {
     return <Navigate to={"/auth/login"} />;
   }
 
-  if (isAuthenticated && location.pathname.includes("auth")) {
+  if (isAuthenticated && location.pathname.includes("auth") && !isLoading) {
     if (user?.role === "admin") {
       return <Navigate to={"/admin/dashboard"} />;
     }
@@ -16,10 +16,18 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
   }
 
   if (isAuthenticated) {
-    if (user?.role === "admin" && location.pathname.includes("shop")) {
+    if (
+      user?.role === "admin" &&
+      location.pathname.includes("shop") &&
+      !isLoading
+    ) {
       return <Navigate to={"/unauth-page"} />;
     }
-    if (user?.role === "user" && location.pathname.includes("admin")) {
+    if (
+      user?.role === "user" &&
+      location.pathname.includes("admin") &&
+      !isLoading
+    ) {
       return <Navigate to={"/unauth-page"} />;
     }
   }
@@ -29,6 +37,7 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
 
 CheckAuth.propTypes = {
   isAuthenticated: proptypes.bool,
+  isLoading: proptypes.bool,
   user: proptypes.object,
   children: proptypes.node,
 };
