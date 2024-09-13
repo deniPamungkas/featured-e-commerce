@@ -13,7 +13,7 @@ dbconnect();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["https://featured-e-commerce.vercel.app", "http://localhost:5173"],
     methods: ["GET", "CREATE", "PUT", "PATCH", "DELETE"],
     allowedHeaders: [
       "Content-Type",

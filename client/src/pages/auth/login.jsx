@@ -21,11 +21,11 @@ const Login = () => {
     try {
       e.preventDefault();
       const res = await dispatch(loginUser(formData));
-      if (res.payload.error) {
+      if (res.payload.error || res.error) {
         toast({
           variant: "destructive",
           title: "Something went wrong.",
-          description: res.payload.error,
+          description: res.payload.error || res.error.message,
         });
         return res;
       }

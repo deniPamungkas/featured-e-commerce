@@ -1,3 +1,4 @@
+import { apiBaseUrl } from "@/config/constants";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -11,11 +12,9 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/signUp",
-        formData,
-        { withCredentials: true }
-      );
+      const response = await axios.post(`${apiBaseUrl}/auth/signUp`, formData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -29,11 +28,9 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/login",
-        formData,
-        { withCredentials: true }
-      );
+      const response = await axios.post(`${apiBaseUrl}/auth/login`, formData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -47,11 +44,9 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/logout",
-        formData,
-        { withCredentials: true }
-      );
+      const response = await axios.post(`${apiBaseUrl}/auth/logout`, formData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -65,16 +60,13 @@ export const checkAuth = createAsyncThunk(
   "auth/check-auth",
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/auth/check-auth",
-        {
-          withCredentials: true,
-          headers: {
-            "cache-control":
-              "no-store, no-cache, must-revalidate, proxy-revalidate",
-          },
-        }
-      );
+      const response = await axios.get(`${apiBaseUrl}/auth/check-auth`, {
+        withCredentials: true,
+        headers: {
+          "cache-control":
+            "no-store, no-cache, must-revalidate, proxy-revalidate",
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(

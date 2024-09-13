@@ -1,3 +1,5 @@
+export const apiBaseUrl = "https://featured-e-commerce-vaha.vercel.app";
+
 export const registerFormControl = [
   {
     name: "username",
