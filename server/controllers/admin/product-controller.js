@@ -9,3 +9,5 @@ export const handleUploadImage = async (req, res) => {
     console.log(error);
   }
 };
+
+export const addNewProduct = () => {};

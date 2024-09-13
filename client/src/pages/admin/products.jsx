@@ -1,4 +1,3 @@
-import ImageUpload from "@/components/admin/image-upload";
 import Form from "@/components/common/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config/constants";
+// import { useFormik } from "formik";
 import { useState } from "react";
 
 const initialFormData = {
@@ -27,7 +27,21 @@ const AdminProducts = () => {
   const [openSideDashboard, setOpenSideDashboard] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
   const [imageUpload, setImageUpload] = useState(null);
-  const [imageUploadUrl, setImageUploadUrl] = useState("");
+  // const [imageUploadUrl, setImageUploadUrl] = useState("");
+
+  // const newProductFrom = useFormik({
+  //   initialValues: {
+  //     image: null,
+  //     title: "",
+  //     description: "",
+  //     category: "",
+  //     brand: "",
+  //     price: "",
+  //     salePrice: "",
+  //     totalStock: "",
+  //     averageReview: 0,
+  //   },
+  // });
 
   const handleAddProduct = (e) => {
     try {
@@ -61,14 +75,16 @@ const AdminProducts = () => {
               Lorem ipsum dolor sit amet consec adipisicing elit.
             </SheetDescription>
           </SheetHeader>
-          <ImageUpload
+          {/* <ImageUpload
             imageUpload={imageUpload}
             setImageUpload={setImageUpload}
             imageUploadUrl={imageUploadUrl}
             setImageUploadUrl={setImageUploadUrl}
-          />
+          /> */}
           <br />
           <Form
+            imageUpload={imageUpload}
+            setImageUpload={setImageUpload}
             formControl={addProductFormElements}
             buttonText="Add"
             formData={formData}

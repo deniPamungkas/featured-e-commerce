@@ -12,10 +12,11 @@ cloudinary.config({
 
 export const imageUpload = async (fileBuffer) => {
   try {
+    const fileName = `${Date.now()}-image-product`;
     const res = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
-          { resource_type: "auto", folder: "coba", public_id: "test" },
+          { resource_type: "auto", folder: "coba", public_id: fileName },
           (err, result) => {
             if (err) return reject(err);
             resolve(result);

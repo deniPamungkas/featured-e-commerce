@@ -50,6 +50,13 @@ export const loginFormControl = [
 
 export const addProductFormElements = [
   {
+    label: "Image",
+    name: "image",
+    componentType: "input",
+    type: "file",
+    placeholder: "Drag & drop or click to upload image",
+  },
+  {
     label: "Title",
     name: "title",
     componentType: "input",

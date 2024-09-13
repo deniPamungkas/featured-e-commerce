@@ -51,7 +51,11 @@ export const signUp = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", token, { httpOnly: true, secure: false })
+      .cookie("accessToken", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .json({
         success: true,
         message: "success to register account",
@@ -111,7 +115,11 @@ export const login = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", token, { httpOnly: true, secure: false })
+      .cookie("accessToken", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .json({
         success: true,
         message: "success to login",

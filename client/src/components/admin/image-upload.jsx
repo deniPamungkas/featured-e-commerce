@@ -8,8 +8,8 @@ import { Button } from "../ui/button";
 const ImageUpload = ({
   imageUpload,
   setImageUpload,
-  imageUploadUrl,
-  setImageUploadUrl,
+  // imageUploadUrl,
+  // setImageUploadUrl,
 }) => {
   const inputImgRef = useRef(null);
   const handleInputImageChange = (e) => {
