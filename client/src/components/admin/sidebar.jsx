@@ -14,7 +14,7 @@ import {
 } from "../ui/sheet";
 import proptypes from "prop-types";
 
-const SideMenu = () => {
+const SideMenu = ({ setOpenSide }) => {
   const navigate = useNavigate();
   const menuItems = [
     {
@@ -46,6 +46,7 @@ const SideMenu = () => {
             className="lg:px-8 h-[50px] flex items-center gap-x-2 font-semibold text-gray-600 hover:bg-muted hover:text-foreground cursor-pointer"
             onClick={() => {
               navigate(item.path);
+              setOpenSide((state) => !state);
             }}
           >
             {item.icon}
@@ -65,7 +66,7 @@ const AdminSidebar = ({ openSide, setOpenSide }) => {
           <ChartNoAxesCombined size={25} />
           <h1 className="text-xl font-bold">Admin Panel</h1>
         </div>
-        <SideMenu />
+        <SideMenu setOpenSide={setOpenSide} />
       </aside>
       <Sheet
         open={openSide}
@@ -93,7 +94,7 @@ SideMenu.propTypes = {
 
 AdminSidebar.propTypes = {
   openSide: proptypes.bool,
-  setOpenSide: proptypes.any,
+  setOpenSide: proptypes.func,
 };
 
 export default AdminSidebar;
