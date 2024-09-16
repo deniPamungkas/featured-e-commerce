@@ -10,7 +10,6 @@ import { Textarea } from "../ui/textarea";
 import proptypes from "prop-types";
 import { Label } from "../ui/label";
 import CustomButton from "./button";
-import { useRef } from "react";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 
@@ -23,6 +22,7 @@ const Form = ({
   isLoading,
   imageUpload,
   setImageUpload,
+  inputRef,
 }) => {
   const inputType = {
     INPUT: "input",
@@ -31,8 +31,6 @@ const Form = ({
     FILE: "file",
   };
 
-  const inputImgRef = useRef(null);
-
   const handleInputImageChange = (e) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) setImageUpload(selectedFile);
@@ -40,8 +38,8 @@ const Form = ({
 
   const handleRemoveImage = () => {
     setImageUpload(null);
-    if (inputImgRef.current) {
-      inputImgRef.current.value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
     }
   };
 
@@ -70,7 +68,7 @@ const Form = ({
             >
               <Input
                 required
-                ref={inputImgRef}
+                ref={inputRef}
                 type={formType.type}
                 className="hidden"
                 id={formType.name}
@@ -216,6 +214,7 @@ Form.propTypes = {
   isLoading: proptypes.bool,
   imageUpload: proptypes.any,
   setImageUpload: proptypes.any,
+  inputRef: proptypes.any,
 };
 
 export default Form;

@@ -8,74 +8,69 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config/constants";
-import axios from "axios";
-// import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { productValidationSchema } from "@/helper/validationSchema";
+import { addProductThunk, imageUploadThunk } from "@/store/product-slice";
+import { useFormik } from "formik";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const initialFormData = {
-  image: "",
-  title: "",
-  description: "",
-  category: "",
-  brand: "",
-  price: "",
-  salePrice: "",
-  totalStock: "",
-  averageReview: 0,
-};
 const AdminProducts = () => {
+  const initialFormData = useFormik({
+    initialValues: {
+      image: "",
+      title: "",
+      description: "",
+      category: "",
+      brand: "",
+      price: "",
+      salePrice: "",
+      totalStock: "",
+      averageReview: 0,
+    },
+    onSubmit: async () => {
+      try {
+        const res = await dispatch(imageUploadThunk(uploadForm));
+        if (res) {
+          const response = await dispatch(addProductThunk(formData));
+          setFormData({
+            image: "",
+            title: "",
+            description: "",
+            category: "",
+            brand: "",
+            price: "",
+            salePrice: "",
+            totalStock: "",
+            averageReview: 0,
+          });
+          uploadForm.delete("file");
+          setImageUpload(null);
+          if (inputImgRef.current) {
+            inputImgRef.current.value = "";
+          }
+          return response;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validationSchema: productValidationSchema,
+  });
   const [imageUpload, setImageUpload] = useState(null);
   const [openSideDashboard, setOpenSideDashboard] = useState(false);
-  const [formData, setFormData] = useState(initialFormData);
-  // const [imageUploadUrl, setImageUploadUrl] = useState("");
+  const [formData, setFormData] = useState(initialFormData.initialValues);
+  const { isLoading } = useSelector((state) => state.product);
+  const inputImgRef = useRef(null);
+  const dispatch = useDispatch();
 
   const uploadForm = new FormData();
   uploadForm.append("file", imageUpload);
 
-  // console.log(imageUpload.name);
-
-  // console.log(uploadForm.get("file").name);
-
-  // const newProductFrom = useFormik({
-  //   initialValues: {
-  //     image: null,
-  //     title: "",
-  //     description: "",
-  //     category: "",
-  //     brand: "",
-  //     price: "",
-  //     salePrice: "",
-  //     totalStock: "",
-  //     averageReview: 0,
-  //   },
-  // });
-
-  const handleAddProduct = async (e) => {
-    try {
-      e.preventDefault();
-      const res = await axios.post(
-        "http://localhost:3000/upload/image-upload",
-        uploadForm,
-        { withCredentials: true }
-      );
-      if (res) {
-        const response = await axios.post(
-          "http://localhost:3000/upload/add-product",
-          formData,
-          { withCredentials: true }
-        );
-        console.log(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  console.log(initialFormData.errors);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, image: imageUpload?.name || "" }));
   }, [imageUpload]);
-
-  console.log(formData);
 
   return (
     <div className="p-3">
@@ -100,12 +95,6 @@ const AdminProducts = () => {
               Lorem ipsum dolor sit amet consec adipisicing elit.
             </SheetDescription>
           </SheetHeader>
-          {/* <ImageUpload
-            imageUpload={imageUpload}
-            setImageUpload={setImageUpload}
-            imageUploadUrl={imageUploadUrl}
-            setImageUploadUrl={setImageUploadUrl}
-          /> */}
           <br />
           <Form
             imageUpload={imageUpload}
@@ -114,7 +103,9 @@ const AdminProducts = () => {
             buttonText="Add"
             formData={formData}
             setFormData={setFormData}
-            onSubmit={handleAddProduct}
+            onSubmit={initialFormData.handleSubmit}
+            isLoading={isLoading}
+            inputRef={inputImgRef}
           />
         </SheetContent>
       </Sheet>

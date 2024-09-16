@@ -4,8 +4,8 @@ import ProductSchema from "../../models/product.js";
 export const handleUploadImage = async (req, res) => {
   try {
     const fileBuffer = Buffer.from(req.file?.buffer);
-    const result = await imageUpload(fileBuffer);
-    return res.status(200).json({ success: true, result });
+    const data = await imageUpload(fileBuffer);
+    return res.status(200).json({ success: true, data });
   } catch (error) {
     console.log(error);
   }
