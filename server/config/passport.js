@@ -11,6 +11,7 @@ const cookieExtractor = (req) => {
   if (req && req.cookies) {
     token = req.cookies["accessToken"];
   }
+  console.log(token);
   return token;
 };
 
