@@ -45,9 +45,7 @@ export const signUp = async (req, res) => {
     const payload = {
       id: registeredUser.id,
     };
-    const token = jwt.sign(payload, jwtkey.secret, {
-      expiresIn: jwtkey.tokenLife,
-    });
+    const token = jwt.sign(payload, jwtkey.secret);
 
     return res
       .status(200)
@@ -105,9 +103,7 @@ export const login = async (req, res) => {
       id: user.id,
     };
 
-    const token = jwt.sign(payload, jwtkey.secret, {
-      expiresIn: jwtkey.tokenLife,
-    });
+    const token = jwt.sign(payload, jwtkey.secret);
 
     if (!token) {
       throw new Error();
