@@ -24,7 +24,6 @@ export const imageUpload = async (fileBuffer) => {
         )
         .end(fileBuffer);
     });
-    console.log(res, "res");
     return res;
   } catch (error) {
     console.log(error);

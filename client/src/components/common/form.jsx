@@ -32,9 +32,9 @@ const Form = ({
   };
 
   const inputImgRef = useRef(null);
+
   const handleInputImageChange = (e) => {
     const selectedFile = e.target.files?.[0];
-    console.log(selectedFile);
     if (selectedFile) setImageUpload(selectedFile);
   };
 
@@ -61,68 +61,69 @@ const Form = ({
 
     switch (formType.componentType) {
       case inputType.INPUT:
-        element = (
-          <Input
-            className="outline-none"
-            required
-            type={formType.type}
-            name={formType.name}
-            placeholder={formType.placeholder}
-            id={formType.name}
-            value={value}
-            onChange={(e) => {
-              setFormData({ ...formData, [formType.name]: e.target.value });
-            }}
-          />
-        );
-        break;
-
-      case inputType.FILE:
-        element = (
-          <div
-            className="flex flex-col gap-y-2"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            <Label htmlFor="image-upload">Image Upload</Label>
+        if (formType.type === "file") {
+          element = (
+            <div
+              className="flex flex-col gap-y-2"
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              <Input
+                required
+                ref={inputImgRef}
+                type={formType.type}
+                className="hidden"
+                id={formType.name}
+                onChange={handleInputImageChange}
+              />
+              {!imageUpload ? (
+                <Label htmlFor={formType.name}>
+                  <div className="border-2 border-dashed w-full h-fit flex flex-col items-center justify-center gap-y-6 rounded-lg p-8 text-foreground">
+                    <UploadCloudIcon size={50} />
+                    <p>Drag & drop or click image here</p>
+                  </div>
+                </Label>
+              ) : (
+                <div className="flex items-center justify-between border-dashed rounded-lg border-2">
+                  <div className="flex items-center">
+                    <FileIcon className="w-8 text-primary mr-2 h-8" />
+                  </div>
+                  <p className="text-sm font-medium">{imageUpload.name}</p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-foreground"
+                    onClick={handleRemoveImage}
+                  >
+                    <XIcon className="w-4 h-4" />
+                    <span className="sr-only">Remove File</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        } else {
+          element = (
             <Input
-              ref={inputImgRef}
-              type="file"
-              className="hidden"
-              id="image-upload"
-              onChange={handleInputImageChange}
+              className="outline-none"
+              required
+              type={formType.type}
+              name={formType.name}
+              placeholder={formType.placeholder}
+              id={formType.name}
+              value={value}
+              onChange={(e) => {
+                setFormData({ ...formData, [formType.name]: e.target.value });
+              }}
             />
-            {!imageUpload ? (
-              <Label htmlFor="image-upload">
-                <div className="border-2 border-dashed w-full h-fit flex flex-col items-center justify-center gap-y-6 rounded-lg p-8 text-foreground">
-                  <UploadCloudIcon size={50} />
-                  <p>Drag & drop or click image here</p>
-                </div>
-              </Label>
-            ) : (
-              <div className="flex items-center justify-between border-dashed rounded-lg border-2">
-                <div className="flex items-center">
-                  <FileIcon className="w-8 text-primary mr-2 h-8" />
-                </div>
-                <p className="text-sm font-medium">{imageUpload.name}</p>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-foreground"
-                  onClick={handleRemoveImage}
-                >
-                  <XIcon className="w-4 h-4" />
-                  <span className="sr-only">Remove File</span>
-                </Button>
-              </div>
-            )}
-          </div>
-        );
+          );
+        }
         break;
 
       case inputType.SELECT:
         element = (
           <Select
+            required
             value={value}
             onValueChange={(value) => {
               setFormData({ ...formData, [formType.name]: value });
@@ -149,6 +150,7 @@ const Form = ({
       case inputType.TEXTAREA:
         element = (
           <Textarea
+            required
             value={value}
             type={formType.type}
             name={formType.name}
@@ -184,6 +186,7 @@ const Form = ({
       action=""
       className="w-full flex flex-col space-y-3"
       onSubmit={onSubmit}
+      encType="multipart/form-data"
     >
       <div className="flex flex-col gap-y-4">
         {formControl.map((formItem) => {

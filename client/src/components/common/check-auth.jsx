@@ -4,7 +4,10 @@ import proptypes from "prop-types";
 const CheckAuth = ({ isAuthenticated, user, children, isLoading }) => {
   const location = useLocation();
 
-  if (!isAuthenticated && location.pathname.includes("admin") && isLoading) {
+  if (!isAuthenticated && location.pathname.includes("admin")) {
+    if (isLoading) {
+      return <Navigate to={location.pathname} />;
+    }
     return <Navigate to={"/auth/login"} />;
   }
 

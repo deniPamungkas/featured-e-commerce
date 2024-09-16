@@ -8,11 +8,12 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config/constants";
+import axios from "axios";
 // import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const initialFormData = {
-  image: null,
+  image: "",
   title: "",
   description: "",
   category: "",
@@ -22,12 +23,18 @@ const initialFormData = {
   totalStock: "",
   averageReview: 0,
 };
-
 const AdminProducts = () => {
+  const [imageUpload, setImageUpload] = useState(null);
   const [openSideDashboard, setOpenSideDashboard] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
-  const [imageUpload, setImageUpload] = useState(null);
   // const [imageUploadUrl, setImageUploadUrl] = useState("");
+
+  const uploadForm = new FormData();
+  uploadForm.append("file", imageUpload);
+
+  // console.log(imageUpload.name);
+
+  // console.log(uploadForm.get("file").name);
 
   // const newProductFrom = useFormik({
   //   initialValues: {
@@ -43,14 +50,32 @@ const AdminProducts = () => {
   //   },
   // });
 
-  const handleAddProduct = (e) => {
+  const handleAddProduct = async (e) => {
     try {
       e.preventDefault();
-      console.log(formData);
+      const res = await axios.post(
+        "http://localhost:3000/upload/image-upload",
+        uploadForm,
+        { withCredentials: true }
+      );
+      if (res) {
+        const response = await axios.post(
+          "http://localhost:3000/upload/add-product",
+          formData,
+          { withCredentials: true }
+        );
+        console.log(response);
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, image: imageUpload?.name || "" }));
+  }, [imageUpload]);
+
+  console.log(formData);
 
   return (
     <div className="p-3">

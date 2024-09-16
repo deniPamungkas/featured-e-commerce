@@ -46,7 +46,7 @@ const SideMenu = ({ setOpenSide }) => {
             className="lg:px-8 h-[50px] flex items-center gap-x-2 font-semibold text-gray-600 hover:bg-muted hover:text-foreground cursor-pointer"
             onClick={() => {
               navigate(item.path);
-              setOpenSide((state) => !state);
+              setOpenSide(false);
             }}
           >
             {item.icon}

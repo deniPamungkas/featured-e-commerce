@@ -1,6 +1,10 @@
 import { Router } from "express";
 import upload from "../../helper/multer.js";
-import { handleUploadImage } from "../../controllers/admin/product-controller.js";
+import {
+  addNewProduct,
+  handleUploadImage,
+} from "../../controllers/admin/product-controller.js";
+import { auth } from "../../middlewares/auth.js";
 
 const route = Router();
 
@@ -32,5 +36,6 @@ const route = Router();
 // });
 
 route.post("/image-upload", upload.single("file"), handleUploadImage);
+route.post("/add-product", auth, addNewProduct);
 
 export default route;
