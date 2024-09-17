@@ -12,7 +12,6 @@ export const addProductThunk = createAsyncThunk(
   "product/add",
   async (formData, { rejectWithValue }) => {
     try {
-      console.log("add");
       const response = await axios.post(
         `${apiBaseUrl}/upload/add-product`,
         formData,
@@ -36,7 +35,6 @@ export const imageUploadThunk = createAsyncThunk(
         formData,
         { withCredentials: true }
       );
-      console.log("img", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(

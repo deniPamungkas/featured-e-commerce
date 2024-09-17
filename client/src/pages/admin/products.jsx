@@ -11,7 +11,7 @@ import { addProductFormElements } from "@/config/constants";
 import { productValidationSchema } from "@/helper/validationSchema";
 import { addProductThunk, imageUploadThunk } from "@/store/product-slice";
 import { useFormik } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const AdminProducts = () => {
@@ -27,38 +27,11 @@ const AdminProducts = () => {
       totalStock: "",
       averageReview: 0,
     },
-    onSubmit: async () => {
-      try {
-        const res = await dispatch(imageUploadThunk(uploadForm));
-        if (res) {
-          const response = await dispatch(addProductThunk(formData));
-          setFormData({
-            image: "",
-            title: "",
-            description: "",
-            category: "",
-            brand: "",
-            price: "",
-            salePrice: "",
-            totalStock: "",
-            averageReview: 0,
-          });
-          uploadForm.delete("file");
-          setImageUpload(null);
-          if (inputImgRef.current) {
-            inputImgRef.current.value = "";
-          }
-          return response;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
     validationSchema: productValidationSchema,
   });
   const [imageUpload, setImageUpload] = useState(null);
   const [openSideDashboard, setOpenSideDashboard] = useState(false);
-  const [formData, setFormData] = useState(initialFormData.initialValues);
+  // const [formData, setFormData] = useState(initialFormData.initialValues);
   const { isLoading } = useSelector((state) => state.product);
   const inputImgRef = useRef(null);
   const dispatch = useDispatch();
@@ -66,11 +39,30 @@ const AdminProducts = () => {
   const uploadForm = new FormData();
   uploadForm.append("file", imageUpload);
 
-  console.log(initialFormData.errors);
-
-  useEffect(() => {
-    setFormData((prev) => ({ ...prev, image: imageUpload?.name || "" }));
-  }, [imageUpload]);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const res = await dispatch(imageUploadThunk(uploadForm));
+      if (res.payload.data) {
+        const response = await dispatch(
+          addProductThunk({
+            ...initialFormData.values,
+            image: res.payload.data.secure_url,
+          })
+        );
+        initialFormData.resetForm();
+        uploadForm.delete("file");
+        setImageUpload(null);
+        if (inputImgRef.current) {
+          inputImgRef.current.value = "";
+        }
+        console.log(response);
+        return response;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="p-3">
@@ -101,9 +93,9 @@ const AdminProducts = () => {
             setImageUpload={setImageUpload}
             formControl={addProductFormElements}
             buttonText="Add"
-            formData={formData}
-            setFormData={setFormData}
-            onSubmit={initialFormData.handleSubmit}
+            formData={initialFormData.values}
+            setFormData={initialFormData.setValues}
+            onSubmit={handleSubmit}
             isLoading={isLoading}
             inputRef={inputImgRef}
           />
