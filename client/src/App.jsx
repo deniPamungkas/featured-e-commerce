@@ -19,6 +19,7 @@ import UnauthPage from "./components/common/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   const { isAuthenticated, user, isLoading } = useSelector(
@@ -26,6 +27,7 @@ function App() {
   );
 
   const dispatch = useDispatch();
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -34,7 +36,7 @@ function App() {
   return isLoading ? (
     <div>loading</div>
   ) : (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Routes>
         <Route
           path="/auth"
@@ -97,7 +99,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </QueryClientProvider>
   );
 }
 

@@ -10,13 +10,13 @@ function AdminProductCard({
   handleDelete,
 }) {
   return (
-    <Card className="w-full max-w-sm mx-auto">
+    <Card className="w-[180px] xl:w-[210px] md:w-[230px] m-auto">
       <div>
         <div className="relative">
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg"
+            className="w-full h-[150px] md:h-[200px] object-cover rounded-t-lg"
           />
         </div>
         <CardContent>

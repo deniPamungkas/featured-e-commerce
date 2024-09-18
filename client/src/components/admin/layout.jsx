@@ -11,7 +11,7 @@ const AdminLayout = () => {
       <AdminSidebar openSide={openSide} setOpenSide={setOpenSide} />
       <div className="flex flex-col w-full">
         <AdminHeader setOpenSide={setOpenSide} />
-        <main className="bg-muted/45 w-full">
+        <main className="bg-gray-100 w-full">
           <Outlet />
         </main>
       </div>

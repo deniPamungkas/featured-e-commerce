@@ -3,6 +3,7 @@ import upload from "../../helper/multer.js";
 import {
   addNewProduct,
   deleteAllProduct,
+  deleteProduct,
   editProduct,
   fetchAllProducts,
   handleUploadImage,
@@ -42,6 +43,7 @@ route.post("/image-upload", upload.single("file"), handleUploadImage);
 route.post("/", auth, addNewProduct);
 route.get("/", auth, fetchAllProducts);
 route.patch("/:id", auth, editProduct);
+route.delete("/:id", auth, deleteProduct);
 // route.delete("/delete-all", auth, deleteAllProduct);
 
 export default route;

@@ -6,6 +6,7 @@ const initialState = {
   isLoading: false,
   product: null,
   image: null,
+  productList: [],
 };
 
 export const addProductThunk = createAsyncThunk(
@@ -26,6 +27,23 @@ export const addProductThunk = createAsyncThunk(
   }
 );
 
+export const deleteProductThunk = createAsyncThunk(
+  "product/delete",
+  async (productId, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${apiBaseUrl}/admin/product/${productId}`,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
 export const imageUploadThunk = createAsyncThunk(
   "product/img-upload",
   async (formData, { rejectWithValue }) => {
@@ -35,6 +53,22 @@ export const imageUploadThunk = createAsyncThunk(
         formData,
         { withCredentials: true }
       );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
+export const fetchAllProductThunk = createAsyncThunk(
+  "product/fetch-all",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${apiBaseUrl}/admin/product`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -75,6 +109,32 @@ const productSlice = createSlice({
         state.product = action.payload.data;
       })
       .addCase(addProductThunk.rejected, (state) => {
+        console.log("rejected");
+        state.isLoading = false;
+      })
+      .addCase(fetchAllProductThunk.pending, (state) => {
+        console.log("pending");
+        state.isLoading = true;
+      })
+      .addCase(fetchAllProductThunk.fulfilled, (state, action) => {
+        console.log("fulfilled");
+        state.isLoading = false;
+        state.productList = action.payload.data;
+      })
+      .addCase(fetchAllProductThunk.rejected, (state) => {
+        console.log("rejected");
+        state.isLoading = false;
+      })
+      .addCase(deleteProductThunk.pending, (state) => {
+        console.log("pending");
+        state.isLoading = true;
+      })
+      .addCase(deleteProductThunk.fulfilled, (state, action) => {
+        console.log("fulfilled");
+        state.isLoading = false;
+        state.product = action.payload.data;
+      })
+      .addCase(deleteProductThunk.rejected, (state) => {
         console.log("rejected");
         state.isLoading = false;
       });

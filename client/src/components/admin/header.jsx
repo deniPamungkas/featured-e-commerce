@@ -29,7 +29,7 @@ const AdminHeader = ({ setOpenSide }) => {
   };
 
   return (
-    <header className="flex w-full h-[50px] px-3 border-b">
+    <header className="flex w-full h-[50px] px-1 md:px-3 border-b">
       <div className="flex-1 flex justify-start items-center">
         <Button
           className="lg:hidden"

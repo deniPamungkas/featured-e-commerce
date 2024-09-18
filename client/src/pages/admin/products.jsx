@@ -1,3 +1,4 @@
+import AdminProductCard from "@/components/admin/product-card";
 import Form from "@/components/common/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +10,13 @@ import {
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config/constants";
 import { productValidationSchema } from "@/helper/validationSchema";
-import { addProductThunk, imageUploadThunk } from "@/store/product-slice";
+import {
+  addProductThunk,
+  deleteProductThunk,
+  fetchAllProductThunk,
+  imageUploadThunk,
+} from "@/store/product-slice";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,41 +42,97 @@ const AdminProducts = () => {
   const { isLoading } = useSelector((state) => state.product);
   const inputImgRef = useRef(null);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const uploadForm = new FormData();
   uploadForm.append("file", imageUpload);
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      const res = await dispatch(imageUploadThunk(uploadForm));
-      if (res.payload.data) {
-        const response = await dispatch(
-          addProductThunk({
-            ...initialFormData.values,
-            image: res.payload.data.secure_url,
-          })
-        );
-        initialFormData.resetForm();
-        uploadForm.delete("file");
-        setImageUpload(null);
-        if (inputImgRef.current) {
-          inputImgRef.current.value = "";
+  const addProductMutation = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await dispatch(imageUploadThunk(uploadForm));
+        if (res.payload.data) {
+          const response = await dispatch(
+            addProductThunk({
+              ...initialFormData.values,
+              image: res.payload.data.secure_url,
+            })
+          );
+          initialFormData.resetForm();
+          uploadForm.delete("file");
+          setImageUpload(null);
+          if (inputImgRef.current) {
+            inputImgRef.current.value = "";
+          }
+          setOpenSideDashboard(false);
+          console.log(response);
+          return response;
         }
-        console.log(response);
-        return response;
+      } catch (error) {
+        console.log(error);
       }
+    },
+    mutationKey: ["addProductMutation"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fetchAllProduct"] });
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addProductMutation.mutate();
+  };
+
+  const handleDeleteProduct = async (id) => {
+    try {
+      const result = await dispatch(deleteProductThunk(id));
+      console.log(result);
+      return result;
     } catch (error) {
       console.log(error);
     }
   };
 
+  const fetchAllProduct = useQuery({
+    queryFn: async () => {
+      try {
+        const result = await dispatch(fetchAllProductThunk());
+        return result;
+      } catch (error) {
+        return error;
+      }
+    },
+    queryKey: ["fetchAllProduct"],
+  });
   return (
-    <div className="p-3">
+    <div className="p-1 md:p-3">
       <div className="w-full h-fit flex justify-end items-center">
         <Button onClick={() => setOpenSideDashboard((state) => !state)}>
           Add New Product
         </Button>
+      </div>
+      <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4">
+        {fetchAllProduct?.data?.payload ? (
+          fetchAllProduct?.data?.payload?.data.map((product) => {
+            return (
+              <AdminProductCard
+                key={product.title}
+                product={product}
+                handleDelete={handleDeleteProduct}
+              />
+            );
+          })
+        ) : (
+          <span>failed to load data</span>
+        )}
+
+        {fetchAllProduct?.data?.payload ? (
+          fetchAllProduct?.data?.payload?.data.map((product) => {
+            return <AdminProductCard key={product.title} product={product} />;
+          })
+        ) : (
+          <span>failed to load data</span>
+        )}
       </div>
       <Sheet
         open={openSideDashboard}
