@@ -2,6 +2,9 @@ import { Router } from "express";
 import upload from "../../helper/multer.js";
 import {
   addNewProduct,
+  deleteAllProduct,
+  editProduct,
+  fetchAllProducts,
   handleUploadImage,
 } from "../../controllers/admin/product-controller.js";
 import { auth } from "../../middlewares/auth.js";
@@ -36,6 +39,9 @@ const route = Router();
 // });
 
 route.post("/image-upload", upload.single("file"), handleUploadImage);
-route.post("/add-product", auth, addNewProduct);
+route.post("/", auth, addNewProduct);
+route.get("/", auth, fetchAllProducts);
+route.patch("/:id", auth, editProduct);
+// route.delete("/delete-all", auth, deleteAllProduct);
 
 export default route;

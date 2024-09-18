@@ -52,3 +52,73 @@ export const addNewProduct = async (req, res) => {
     });
   }
 };
+
+export const fetchAllProducts = async (req, res) => {
+  try {
+    const listOfProducts = await ProductSchema.find({});
+    res.status(200).json({
+      success: true,
+      data: listOfProducts,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Error occured",
+    });
+  }
+};
+
+export const editProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      image,
+      title,
+      description,
+      category,
+      brand,
+      price,
+      salePrice,
+      totalStock,
+      averageReview,
+    } = req.body;
+    const findProduct = await ProductSchema.findByIdAndUpdate(id);
+    if (findProduct) {
+      findProduct.title = title;
+      findProduct.description = description;
+      findProduct.category = category;
+      findProduct.brand = brand;
+      findProduct.price = price;
+      findProduct.salePrice = salePrice;
+      findProduct.totalStock = totalStock;
+      findProduct.image = image;
+      findProduct.averageReview = averageReview;
+
+      const editedMenu = await findProduct.save();
+      return res
+        .status(200)
+        .json({ message: "Product updated!", data: editedMenu });
+    }
+    if (!findProduct) {
+      return res
+        .status(404)
+        .json({ message: "Product Not found", error: findProduct });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Something went wrong, failed to edit product", error });
+  }
+};
+
+export const deleteAllProduct = async (req, res) => {
+  try {
+    const response = await ProductSchema.deleteMany({});
+    console.log(response);
+    return res.status(200).send("delete all product");
+  } catch (error) {
+    console.log(error);
+  }
+};

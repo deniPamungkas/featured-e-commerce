@@ -13,7 +13,7 @@ export const addProductThunk = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${apiBaseUrl}/upload/add-product`,
+        `${apiBaseUrl}/admin/product`,
         formData,
         { withCredentials: true }
       );
@@ -31,7 +31,7 @@ export const imageUploadThunk = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${apiBaseUrl}/upload/image-upload`,
+        `${apiBaseUrl}/admin/product/image-upload`,
         formData,
         { withCredentials: true }
       );

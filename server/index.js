@@ -29,7 +29,7 @@ app.use(passport.initialize());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/auth", authRoute);
-app.use("/upload", uploadRoute);
+app.use("/admin/product", uploadRoute);
 
 app.listen(3000, () => {
   console.log("server is running on port 3000");

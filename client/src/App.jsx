@@ -31,7 +31,9 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  return (
+  return isLoading ? (
+    <div>loading</div>
+  ) : (
     <>
       <Routes>
         <Route
