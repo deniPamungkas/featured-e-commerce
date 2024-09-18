@@ -44,7 +44,11 @@ function AdminProductCard({
           >
             Edit
           </Button>
-          <Button onClick={() => handleDelete(product?._id)}>Delete</Button>
+          <Button
+            onClick={() => (handleDelete ? handleDelete(product?._id) : null)}
+          >
+            Delete
+          </Button>
         </CardFooter>
       </div>
     </Card>
