@@ -31,8 +31,26 @@ export const deleteProductThunk = createAsyncThunk(
   "product/delete",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await axios.delete(
         `${apiBaseUrl}/admin/product/${productId}`,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
+export const editProductThunk = createAsyncThunk(
+  "product/edit",
+  async ({ productId, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${apiBaseUrl}/admin/product/${productId}`,
+        formData,
         { withCredentials: true }
       );
       return response.data;
@@ -135,6 +153,19 @@ const productSlice = createSlice({
         state.product = action.payload.data;
       })
       .addCase(deleteProductThunk.rejected, (state) => {
+        console.log("rejected");
+        state.isLoading = false;
+      })
+      .addCase(editProductThunk.pending, (state) => {
+        console.log("pending");
+        state.isLoading = true;
+      })
+      .addCase(editProductThunk.fulfilled, (state, action) => {
+        console.log("fulfilled");
+        state.isLoading = false;
+        state.product = action.payload.data;
+      })
+      .addCase(editProductThunk.rejected, (state) => {
         console.log("rejected");
         state.isLoading = false;
       });

@@ -23,6 +23,7 @@ const Form = ({
   imageUpload,
   setImageUpload,
   inputRef,
+  currentEditedId,
 }) => {
   const inputType = {
     INPUT: "input",
@@ -67,6 +68,7 @@ const Form = ({
               onDrop={handleDrop}
             >
               <Input
+                disabled={currentEditedId !== null ? true : false}
                 required
                 ref={inputRef}
                 type={formType.type}
@@ -215,6 +217,7 @@ Form.propTypes = {
   imageUpload: proptypes.any,
   setImageUpload: proptypes.any,
   inputRef: proptypes.any,
+  currentEditedId: proptypes.any,
 };
 
 export default Form;

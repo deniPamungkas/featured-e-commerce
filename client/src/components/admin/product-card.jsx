@@ -5,7 +5,7 @@ import proptypes from "prop-types";
 function AdminProductCard({
   product,
   setFormData,
-  setOpenCreateProductsDialog,
+  setOpenSideDashboard,
   setCurrentEditedId,
   handleDelete,
 }) {
@@ -37,7 +37,7 @@ function AdminProductCard({
         <CardFooter className="flex justify-between items-center">
           <Button
             onClick={() => {
-              setOpenCreateProductsDialog(true);
+              setOpenSideDashboard(true);
               setCurrentEditedId(product?._id);
               setFormData(product);
             }}
@@ -58,7 +58,7 @@ function AdminProductCard({
 AdminProductCard.propTypes = {
   product: proptypes.any,
   setFormData: proptypes.any,
-  setOpenCreateProductsDialog: proptypes.any,
+  setOpenSideDashboard: proptypes.any,
   setCurrentEditedId: proptypes.any,
   handleDelete: proptypes.any,
 };

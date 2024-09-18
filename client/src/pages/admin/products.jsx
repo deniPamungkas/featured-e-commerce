@@ -13,6 +13,7 @@ import { productValidationSchema } from "@/helper/validationSchema";
 import {
   addProductThunk,
   deleteProductThunk,
+  editProductThunk,
   fetchAllProductThunk,
   imageUploadThunk,
 } from "@/store/product-slice";
@@ -38,6 +39,7 @@ const AdminProducts = () => {
   });
   const [imageUpload, setImageUpload] = useState(null);
   const [openSideDashboard, setOpenSideDashboard] = useState(false);
+  const [currentEditedId, setCurrentEditedId] = useState(null);
   // const [formData, setFormData] = useState(initialFormData.initialValues);
   const { isLoading } = useSelector((state) => state.product);
   const inputImgRef = useRef(null);
@@ -50,6 +52,20 @@ const AdminProducts = () => {
   const addProductMutation = useMutation({
     mutationFn: async () => {
       try {
+        if (currentEditedId !== null) {
+          const result = await dispatch(
+            editProductThunk({
+              productId: currentEditedId,
+              formData: initialFormData.values,
+            })
+          );
+          if (result.payload.data) {
+            setCurrentEditedId(null);
+            initialFormData.resetForm();
+          }
+          console.log(result);
+          return result;
+        }
         const res = await dispatch(imageUploadThunk(uploadForm));
         if (res.payload.data) {
           const response = await dispatch(
@@ -119,6 +135,9 @@ const AdminProducts = () => {
                 key={product.title}
                 product={product}
                 handleDelete={handleDeleteProduct}
+                setOpenSideDashboard={setOpenSideDashboard}
+                setFormData={initialFormData.setValues}
+                setCurrentEditedId={setCurrentEditedId}
               />
             );
           })
@@ -155,12 +174,13 @@ const AdminProducts = () => {
             imageUpload={imageUpload}
             setImageUpload={setImageUpload}
             formControl={addProductFormElements}
-            buttonText="Add"
+            buttonText={currentEditedId !== null ? "Edit" : "Add"}
             formData={initialFormData.values}
             setFormData={initialFormData.setValues}
             onSubmit={handleSubmit}
             isLoading={isLoading}
             inputRef={inputImgRef}
+            currentEditedId={currentEditedId}
           />
         </SheetContent>
       </Sheet>
