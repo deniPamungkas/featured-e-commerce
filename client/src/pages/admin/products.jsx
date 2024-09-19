@@ -147,7 +147,16 @@ const AdminProducts = () => {
 
         {fetchAllProduct?.data?.payload ? (
           fetchAllProduct?.data?.payload?.data.map((product) => {
-            return <AdminProductCard key={product.title} product={product} />;
+            return (
+              <AdminProductCard
+                key={product.title}
+                product={product}
+                handleDelete={handleDeleteProduct}
+                setOpenSideDashboard={setOpenSideDashboard}
+                setFormData={initialFormData.setValues}
+                setCurrentEditedId={setCurrentEditedId}
+              />
+            );
           })
         ) : (
           <span>failed to load data</span>

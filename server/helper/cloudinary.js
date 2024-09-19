@@ -29,3 +29,19 @@ export const imageUpload = async (fileBuffer) => {
     console.log(error);
   }
 };
+
+export const imageDelete = async (publicId) => {
+  try {
+    console.log(publicId);
+    const result = await cloudinary.uploader.destroy({
+      publicId,
+      resource_type: "auto",
+    });
+    if (result) {
+      console.log(result, "cloud");
+      return result;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

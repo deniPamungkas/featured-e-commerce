@@ -1,4 +1,4 @@
-import { imageUpload } from "../../helper/cloudinary.js";
+import { imageDelete, imageUpload } from "../../helper/cloudinary.js";
 import ProductSchema from "../../models/product.js";
 
 export const handleUploadImage = async (req, res) => {
@@ -124,12 +124,20 @@ export const deleteProduct = async (req, res) => {
         message: "Product not found",
         data: [],
       });
+    const deletedProductImage = product.image.split("/");
+    const deletedProductPublicId = deletedProductImage
+      .slice(deletedProductImage.length - 2, deletedProductImage.length)
+      .join("/");
 
-    res.status(200).json({
-      success: true,
-      message: "Product delete successfully",
-      data: product,
-    });
+    const result = await imageDelete(deletedProductPublicId);
+    console.log(result);
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: "Product delete successfully",
+        data: product,
+      });
+    }
   } catch (e) {
     console.log(e);
     res.status(500).json({

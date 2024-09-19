@@ -6,6 +6,7 @@ const initialState = {
   isAuthenticated: false,
   isLoading: false,
   user: null,
+  checkingAuth: false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -124,7 +125,7 @@ const authSlice = createSlice({
         console.log("fullfiled");
         state.isLoading = false;
         state.user = null;
-        state.isAuthenticated = true;
+        state.isAuthenticated = false;
       })
       .addCase(logoutUser.rejected, (state) => {
         console.log("rejected");
@@ -134,17 +135,17 @@ const authSlice = createSlice({
       })
       .addCase(checkAuth.pending, (state) => {
         console.log("pending");
-        state.isLoading = true;
+        state.checkingAuth = true;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         console.log("fullfiled");
-        state.isLoading = false;
+        state.checkingAuth = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(checkAuth.rejected, (state) => {
         console.log("rejected");
-        state.isLoading = false;
+        state.checkingAuth = false;
         state.user = null;
         state.isAuthenticated = false;
       });

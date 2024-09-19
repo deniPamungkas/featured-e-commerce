@@ -22,7 +22,7 @@ import { checkAuth } from "./store/auth-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
-  const { isAuthenticated, user, isLoading } = useSelector(
+  const { isAuthenticated, user, isLoading, checkingAuth } = useSelector(
     (state) => state.auth
   );
 
@@ -33,8 +33,8 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  return isLoading ? (
-    <div>loading</div>
+  return checkingAuth ? (
+    <div>checking auth</div>
   ) : (
     <QueryClientProvider client={queryClient}>
       <Routes>
