@@ -13,7 +13,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,8 +31,9 @@ import { Label } from "../ui/label";
 import { shoppingViewHeaderMenuItems } from "@/config/constants";
 import { logoutUser } from "@/store/auth-slice";
 import { toast } from "@/hooks/use-toast";
+import proptypes from "prop-types";
 
-const MenuItems = () => {
+const MenuItems = ({ setOpenSideMenuSheet = null }) => {
   const navigate = useNavigate();
   // const location = useLocation();
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -62,7 +62,10 @@ const MenuItems = () => {
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
-          onClick={() => navigate(menuItem.path)}
+          onClick={() => {
+            navigate(menuItem.path);
+            setOpenSideMenuSheet(false);
+          }}
           className="text-sm font-medium cursor-pointer"
           key={menuItem.id}
         >
@@ -71,6 +74,10 @@ const MenuItems = () => {
       ))}
     </nav>
   );
+};
+
+MenuItems.propTypes = {
+  setOpenSideMenuSheet: proptypes.any,
 };
 
 const HeaderRightContent = () => {
@@ -177,6 +184,8 @@ const HeaderRightContent = () => {
 };
 
 const ShoppingHeader = () => {
+  const [openSideMenuSheet, setOpenSideMenuSheet] = useState(false);
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -184,13 +193,19 @@ const ShoppingHeader = () => {
           <HousePlug className="h-6 w-6" />
           <span className="font-bold">Ecommerce</span>
         </Link>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle header menu</span>
-            </Button>
-          </SheetTrigger>
+        <Sheet
+          open={openSideMenuSheet}
+          onOpenChange={() => setOpenSideMenuSheet(false)}
+        >
+          <Button
+            variant="outline"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setOpenSideMenuSheet(true)}
+          >
+            <Menu className="h-6 w-6" />
+            <span className="sr-only">Toggle header menu</span>
+          </Button>
           <SheetContent side="left" className="w-full max-w-xs">
             <SheetHeader className="mb-3">
               <SheetTitle className="text-xl font-bold text-start">
@@ -200,7 +215,7 @@ const ShoppingHeader = () => {
                 Lorem ipsum dolor sit amet consec adipisicing elit.
               </SheetDescription>
             </SheetHeader>
-            <MenuItems />
+            <MenuItems setOpenSideMenuSheet={setOpenSideMenuSheet} />
             <HeaderRightContent />
           </SheetContent>
         </Sheet>
