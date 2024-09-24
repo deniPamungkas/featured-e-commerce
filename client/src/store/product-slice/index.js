@@ -131,16 +131,16 @@ const productSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(fetchAllProductThunk.pending, (state) => {
-        console.log("pending");
+        console.log("pending fetchAllProductThunk");
         state.isLoading = true;
       })
       .addCase(fetchAllProductThunk.fulfilled, (state, action) => {
-        console.log("fulfilled");
+        console.log("fulfilled fetchAllProductThunk");
         state.isLoading = false;
         state.productList = action.payload.data;
       })
       .addCase(fetchAllProductThunk.rejected, (state) => {
-        console.log("rejected");
+        console.log("rejected fetchAllProductThunk");
         state.isLoading = false;
       })
       .addCase(deleteProductThunk.pending, (state) => {

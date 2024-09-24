@@ -1,5 +1,6 @@
 import AdminProductCard from "@/components/admin/product-card";
 import Form from "@/components/common/form";
+import { SkeletonCard } from "@/components/common/skeleton-card";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -127,41 +128,33 @@ const AdminProducts = () => {
           Add New Product
         </Button>
       </div>
-      <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4">
-        {fetchAllProduct?.data?.payload ? (
-          fetchAllProduct?.data?.payload?.data.map((product) => {
-            return (
-              <AdminProductCard
-                key={product.title}
-                product={product}
-                handleDelete={handleDeleteProduct}
-                setOpenSideDashboard={setOpenSideDashboard}
-                setFormData={initialFormData.setValues}
-                setCurrentEditedId={setCurrentEditedId}
-              />
-            );
-          })
-        ) : (
-          <span>failed to load data</span>
-        )}
-
-        {fetchAllProduct?.data?.payload ? (
-          fetchAllProduct?.data?.payload?.data.map((product) => {
-            return (
-              <AdminProductCard
-                key={product.title}
-                product={product}
-                handleDelete={handleDeleteProduct}
-                setOpenSideDashboard={setOpenSideDashboard}
-                setFormData={initialFormData.setValues}
-                setCurrentEditedId={setCurrentEditedId}
-              />
-            );
-          })
-        ) : (
-          <span>failed to load data</span>
-        )}
-      </div>
+      {isLoading ? (
+        <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4 p-4">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      ) : (
+        <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4">
+          {fetchAllProduct?.data?.payload ? (
+            fetchAllProduct?.data?.payload?.data.map((product) => {
+              return (
+                <AdminProductCard
+                  key={product.title}
+                  product={product}
+                  handleDelete={handleDeleteProduct}
+                  setOpenSideDashboard={setOpenSideDashboard}
+                  setFormData={initialFormData.setValues}
+                  setCurrentEditedId={setCurrentEditedId}
+                />
+              );
+            })
+          ) : (
+            <span>failed to load data</span>
+          )}
+        </div>
+      )}
       <Sheet
         open={openSideDashboard}
         onOpenChange={() => setOpenSideDashboard((state) => !state)}
