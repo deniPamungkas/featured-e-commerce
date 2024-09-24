@@ -1,3 +1,4 @@
+import { SkeletonCard } from "@/components/common/skeleton-card";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 const UserListing = () => {
-  const { productList } = useSelector((state) => state.shopProduct);
+  const { productList, isLoading } = useSelector((state) => state.shopProduct);
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
@@ -66,7 +67,6 @@ const UserListing = () => {
         await dispatch(
           fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
         );
-        // console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -119,18 +119,27 @@ const UserListing = () => {
             </DropdownMenu>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {productList && productList.length > 0
-            ? productList.map((productItem) => (
-                <ShoppingProductCard
-                  key={productItem.title}
-                  // handleGetProductDetails={handleGetProductDetails}
-                  product={productItem}
-                  // handleAddtoCart={handleAddtoCart}
-                />
-              ))
-            : null}
-        </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+            {productList && productList.length > 0
+              ? productList.map((productItem) => (
+                  <ShoppingProductCard
+                    key={productItem.title}
+                    // handleGetProductDetails={handleGetProductDetails}
+                    product={productItem}
+                    // handleAddtoCart={handleAddtoCart}
+                  />
+                ))
+              : null}
+          </div>
+        )}
       </div>
       {/* <ProductDetailsDialog
     open={openDetailsDialog}

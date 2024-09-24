@@ -42,17 +42,17 @@ const shopProductSlice = createSlice({
   extraReducers: (build) => {
     build
       .addCase(fetchAllFilteredProducts.pending, (state) => {
-        console.log("pending");
+        console.log("pending, filtered product");
         state.isLoading = true;
       })
       .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
-        console.log("fulfilled");
+        console.log("fulfilled, filtered product");
         state.isLoading = false;
         state.productList = action.payload.data;
         state.productDetails = null;
       })
       .addCase(fetchAllFilteredProducts.rejected, (state) => {
-        console.log("rejected");
+        console.log("rejected, filtered product");
         state.isLoading = false;
         state.productList = [];
         state.productDetails = null;
