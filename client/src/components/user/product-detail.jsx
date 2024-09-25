@@ -110,7 +110,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           title:
             result.payload == "Unauthorized"
               ? "Not Logged In"
-              : result.payload.message || result.error.message,
+              : result.payload.message,
         });
       }
     } catch (error) {
