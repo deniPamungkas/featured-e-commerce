@@ -145,7 +145,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
       ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
         reviews.length
       : 0;
-
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
@@ -217,7 +216,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                   <div key={reviewItem._id} className="flex gap-4">
                     <Avatar className="w-10 h-10 border">
                       <AvatarFallback>
-                        {reviewItem?.userName[0].toUpperCase()}
+                        {reviewItem?.userName.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1">
