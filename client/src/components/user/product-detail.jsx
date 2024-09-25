@@ -12,9 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
 import { Label } from "../ui/label";
-// import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
-// import { addReview, getReviews } from "@/store/shop/review-slice";
 import { setProductDetails } from "@/store/shop/product-slice";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import proptypes from "prop-types";
@@ -24,6 +22,7 @@ import {
   setReviews,
 } from "@/store/shop/review-slice";
 import StarRatingComponent from "../common/star-rating";
+import CustomButton from "../common/button";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -31,9 +30,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   //   const { cartItems } = useSelector((state) => state.shopCart);
-  const { reviews } = useSelector((state) => state.productReview);
-
-  //   const { toast } = useToast();
+  const { reviews, isLoading } = useSelector((state) => state.productReview);
 
   const handleRatingChange = (getRating) => {
     setRating(getRating);
@@ -88,7 +85,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         addProductReview({
           productId: productDetails?._id,
           userId: user?.id,
-          userName: user?.userName,
+          userName: user?.username,
           reviewMessage: reviewMsg,
           reviewValue: rating,
         })
@@ -120,19 +117,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         title: "Something went wrong, please try again",
       });
     }
-    // .then((data) => {
-    //   if (data.payload.success) {
-    //     setRating(0);
-    //     setReviewMsg("");
-    //     dispatch(getProductReview(productDetails?._id));
-    //     toast({
-    //       title: "Review added successfully!",
-    //     });
-    //   }
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
   };
 
   useEffect(() => {
@@ -194,17 +178,16 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 Out of Stock
               </Button>
             ) : (
-              <Button
+              <CustomButton
                 className="w-full"
+                buttonText="Add To Cart"
                 // onClick={() =>
                 //   handleAddToCart(
                 //     productDetails?._id,
                 //     productDetails?.totalStock
                 //   )
                 // }
-              >
-                Add to Cart
-              </Button>
+              />
             )}
           </div>
           <Separator />
@@ -215,7 +198,9 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 reviews.map((reviewItem) => (
                   <div key={reviewItem._id} className="flex gap-4">
                     <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>{reviewItem?.userName}</AvatarFallback>
+                      <AvatarFallback>
+                        {reviewItem?.userName?.[0].toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1">
                       <div className="flex items-center gap-2">
@@ -248,12 +233,12 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 onChange={(event) => setReviewMsg(event.target.value)}
                 placeholder="Write a review..."
               />
-              <Button
+              <CustomButton
                 onClick={handleAddReview}
                 disabled={reviewMsg.trim() === ""}
-              >
-                Submit
-              </Button>
+                buttonText="Submit"
+                isLoading={isLoading}
+              />
             </div>
           </div>
         </div>

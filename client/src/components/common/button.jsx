@@ -9,12 +9,13 @@ const CustomButton = ({
   onClick,
   icon,
   className,
+  disabled,
 }) => {
   return (
     <Button
       className={`${className} flex justify-center items-center gap-x-2`}
       type={type || "button"}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
       onClick={onClick}
     >
       {isLoading ? (
@@ -34,6 +35,7 @@ const CustomButton = ({
 CustomButton.propTypes = {
   buttonText: proptypes.string,
   isLoading: proptypes.bool,
+  disabled: proptypes.bool,
   type: proptypes.string,
   className: proptypes.string,
   onClick: proptypes.func,
