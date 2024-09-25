@@ -9,18 +9,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ProductFilter from "@/components/user/filter";
 import ShoppingProductCard from "@/components/user/product-card";
+import ProductDetailsDialog from "@/components/user/product-detail";
 import { sortOptions } from "@/config/constants";
-import { fetchAllFilteredProducts } from "@/store/shop/product-slice";
+import {
+  fetchAllFilteredProducts,
+  fetchProductDetails,
+} from "@/store/shop/product-slice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 const UserListing = () => {
-  const { productList, isLoading } = useSelector((state) => state.shopProduct);
+  const { productList, isLoading, productDetails } = useSelector(
+    (state) => state.shopProduct
+  );
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const categoryParams = searchParams.get("category");
@@ -61,6 +68,10 @@ const UserListing = () => {
     sessionStorage.setItem("filters", JSON.stringify(copyFilters));
   };
 
+  const handleGetProductDetails = (productId) => {
+    dispatch(fetchProductDetails(productId));
+  };
+
   useEffect(() => {
     const fetchAllProduct = async () => {
       try {
@@ -84,6 +95,10 @@ const UserListing = () => {
   useEffect(() => {
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
   }, [categoryParams]);
+
+  useEffect(() => {
+    if (productDetails !== null) setOpenDetailsDialog(true);
+  }, [productDetails]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
@@ -132,7 +147,7 @@ const UserListing = () => {
               ? productList.map((productItem) => (
                   <ShoppingProductCard
                     key={productItem.title}
-                    // handleGetProductDetails={handleGetProductDetails}
+                    handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
                     // handleAddtoCart={handleAddtoCart}
                   />
@@ -141,11 +156,11 @@ const UserListing = () => {
           </div>
         )}
       </div>
-      {/* <ProductDetailsDialog
-    open={openDetailsDialog}
-    setOpen={setOpenDetailsDialog}
-    productDetails={productDetails}
-  /> */}
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   );
 };

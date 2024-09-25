@@ -65,7 +65,8 @@ const ShoppingProductCard = ({
           </Button>
         ) : (
           <Button
-            onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
+            // onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
+            onClick={() => {}}
             className="w-full"
           >
             Add to cart

@@ -34,7 +34,9 @@ function App() {
   }, [dispatch]);
 
   return checkingAuth ? (
-    <div>checking auth</div>
+    <div className="p-4 text-center font-bold text-6xl flex justify-center min-h-screen items-center">
+      <p>Authenticating...</p>
+    </div>
   ) : (
     <QueryClientProvider client={queryClient}>
       <Routes>

@@ -64,7 +64,7 @@ const MenuItems = ({ setOpenSideMenuSheet = null }) => {
         <Label
           onClick={() => {
             navigate(menuItem.path);
-            setOpenSideMenuSheet(false);
+            setOpenSideMenuSheet ? setOpenSideMenuSheet(false) : null;
           }}
           className="text-sm font-medium cursor-pointer"
           key={menuItem.id}
@@ -99,7 +99,7 @@ const HeaderRightContent = () => {
         });
       }
       setOpenCartSheet(false);
-      navigate("/auth/login");
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }

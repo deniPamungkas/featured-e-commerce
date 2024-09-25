@@ -86,65 +86,65 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
-        console.log("pending");
+        console.log("pending registerUser");
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        console.log("fullfiled");
+        console.log("fullfiled registerUser");
         state.isLoading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state) => {
-        console.log("rejected");
+        console.log("rejected registerUser");
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
       })
       .addCase(loginUser.pending, (state) => {
-        console.log("pending");
+        console.log("pending loginUser");
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log("fullfiled");
+        console.log("fullfiled loginUser");
         state.isLoading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state) => {
-        console.log("rejected");
+        console.log("rejected loginUser");
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
       })
       .addCase(logoutUser.pending, (state) => {
-        console.log("pending");
+        console.log("pending logoutUser");
         state.isLoading = true;
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        console.log("fullfiled");
+        console.log("fullfiled logoutUser");
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
       })
       .addCase(logoutUser.rejected, (state) => {
-        console.log("rejected");
+        console.log("rejected logoutUser");
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
       })
       .addCase(checkAuth.pending, (state) => {
-        console.log("pending");
+        console.log("pending checkAuth");
         state.checkingAuth = true;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
-        console.log("fullfiled");
+        console.log("fullfiled checkAuth");
         state.checkingAuth = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(checkAuth.rejected, (state) => {
-        console.log("rejected");
+        console.log("rejected checkAuth");
         state.checkingAuth = false;
         state.user = null;
         state.isAuthenticated = false;

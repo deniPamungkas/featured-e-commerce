@@ -12,8 +12,6 @@ export const fetchAllFilteredProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async ({ filterParams, sortParams }, { rejectWithValue }) => {
     try {
-      // console.log(fetchAllFilteredProducts, "fetchAllFilteredProducts");
-
       const query = new URLSearchParams({
         ...filterParams,
         sortBy: sortParams,
@@ -33,11 +31,29 @@ export const fetchAllFilteredProducts = createAsyncThunk(
   }
 );
 
+export const fetchProductDetails = createAsyncThunk(
+  "/products/fetchProductDetails",
+  async (id, { rejectWithValue }) => {
+    try {
+      const result = await axios.get(`${apiBaseUrl}/shop/product/get/${id}`);
+
+      return result?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
 const shopProductSlice = createSlice({
   initialState,
   name: "shop-product",
   reducers: {
-    setValue: () => {},
+    setProductDetails: (state) => {
+      state.productDetails = null;
+    },
   },
   extraReducers: (build) => {
     build
@@ -56,9 +72,23 @@ const shopProductSlice = createSlice({
         state.isLoading = false;
         state.productList = [];
         state.productDetails = null;
+      })
+      .addCase(fetchProductDetails.pending, (state) => {
+        console.log("pending, fetch product detail");
+        state.isLoading = true;
+      })
+      .addCase(fetchProductDetails.fulfilled, (state, action) => {
+        console.log("fulfilled, fetch product detail");
+        state.isLoading = false;
+        state.productDetails = action.payload.data;
+      })
+      .addCase(fetchProductDetails.rejected, (state) => {
+        console.log("rejected, fetch product detail");
+        state.isLoading = false;
+        state.productDetails = null;
       });
   },
 });
 
-export const { setValue } = shopProductSlice.actions;
+export const { setProductDetails } = shopProductSlice.actions;
 export default shopProductSlice.reducer;
