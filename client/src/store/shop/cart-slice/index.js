@@ -28,8 +28,28 @@ export const addToCart = createAsyncThunk(
 export const fetchCartItems = createAsyncThunk(
   "/cart/get",
   async (id, { rejectWithValue }) => {
+    console.log(id);
     try {
       const result = await axios.get(`${apiBaseUrl}/cart/${id}`, {
+        withCredentials: true,
+      });
+
+      return result?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
+export const updateCartQuantity = createAsyncThunk(
+  "/cart/update",
+  async (data, { rejectWithValue }) => {
+    console.log(data);
+    try {
+      const result = await axios.put(`${apiBaseUrl}/cart/update-cart`, data, {
         withCredentials: true,
       });
 
@@ -79,6 +99,20 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartItems.rejected, (state) => {
         console.log("rejected, get cart items");
+        state.isLoadingCart = false;
+        state.currentCart = [];
+      })
+      .addCase(updateCartQuantity.pending, (state) => {
+        console.log("pending, update cart item");
+        state.isLoadingCart = true;
+      })
+      .addCase(updateCartQuantity.fulfilled, (state, action) => {
+        console.log("fulfilled, update cart item");
+        state.isLoadingCart = false;
+        state.currentCart = action.payload.data;
+      })
+      .addCase(updateCartQuantity.rejected, (state) => {
+        console.log("rejected, update cart item");
         state.isLoadingCart = false;
         state.currentCart = [];
       });

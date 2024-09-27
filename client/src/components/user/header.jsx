@@ -33,6 +33,7 @@ import { logoutUser } from "@/store/auth-slice";
 import { toast } from "@/hooks/use-toast";
 import proptypes from "prop-types";
 import { fetchCartItems } from "@/store/shop/cart-slice";
+import UserCartWrapper from "./cart-wrapper";
 
 const MenuItems = ({ setOpenSideMenuSheet = null }) => {
   const navigate = useNavigate();
@@ -125,14 +126,14 @@ const HeaderRightContent = () => {
           </span>
           <span className="sr-only">User cart</span>
         </Button>
-        {/* <UserCartWrapper
+        <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
-          // cartItems={
-          //   cartItems && cartItems.items && cartItems.items.length > 0
-          //     ? cartItems.items
-          //     : []
-          // }
-        /> */}
+          currentCart={
+            currentCart && currentCart.items && currentCart.items.length > 0
+              ? currentCart.items
+              : []
+          }
+        />
       </Sheet>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

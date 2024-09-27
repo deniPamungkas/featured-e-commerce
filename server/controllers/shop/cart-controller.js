@@ -203,7 +203,7 @@ export const updateCartItemQty = async (req, res) => {
       });
     }
 
-    cart.items[findCurrentProductIndex].quantity += quantity;
+    cart.items[findCurrentProductIndex].quantity = quantity;
     await cart.save();
 
     await cart.populate({
