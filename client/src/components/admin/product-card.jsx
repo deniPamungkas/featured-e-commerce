@@ -10,7 +10,7 @@ function AdminProductCard({
   handleDelete,
 }) {
   return (
-    <Card className="w-[180px] xl:w-[210px] md:w-[230px] m-auto">
+    <Card className="w-full max-w-sm mx-auto">
       <div>
         <div className="relative">
           <img

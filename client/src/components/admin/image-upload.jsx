@@ -5,12 +5,7 @@ import { useRef } from "react";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 
-const ImageUpload = ({
-  imageUpload,
-  setImageUpload,
-  // imageUploadUrl,
-  // setImageUploadUrl,
-}) => {
+const ImageUpload = ({ imageUpload, setImageUpload }) => {
   const inputImgRef = useRef(null);
   const handleInputImageChange = (e) => {
     const selectedFile = e.target.files?.[0];

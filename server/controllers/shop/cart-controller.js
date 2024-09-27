@@ -62,7 +62,7 @@ export const addTocart = async (req, res) => {
       data: cart,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error, "addTocart");
     return res.status(500).json({
       success: false,
       message: "something went wrong, please try again",
@@ -108,7 +108,7 @@ export const fetchCartItems = async (req, res) => {
       data: { ...cart._doc, items: populateCartItems },
     });
   } catch (error) {
-    console.log(error);
+    console.log(error, "fetchCartItems");
     return res.status(500).json({
       success: false,
       message: "something went wrong, please try again",
@@ -165,7 +165,7 @@ export const deleteCartItem = async (req, res) => {
       data: { ...cart._doc, items: populatedCart },
     });
   } catch (error) {
-    console.log(error);
+    console.log(error, "deleteCartItem");
     return res.status(500).json({
       success: false,
       message: "something went wrong, please try again",
@@ -228,7 +228,7 @@ export const updateCartItemQty = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.log(error, "updateCartItemQty");
     res.status(500).json({
       success: false,
       message: "Error",

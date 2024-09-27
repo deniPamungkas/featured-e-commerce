@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  isLoading: false,
+  isLoadingProduct: false,
   product: null,
   image: null,
   productList: [],
@@ -105,69 +105,69 @@ const productSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(imageUploadThunk.pending, (state) => {
-        console.log("pending");
-        state.isLoading = true;
+        console.log("pending imageUploadThunk");
+        state.isLoadingProduct = true;
       })
       .addCase(imageUploadThunk.fulfilled, (state, action) => {
-        console.log("fulfilled");
-        state.isLoading = false;
+        console.log("fulfilled imageUploadThunk");
+        state.isLoadingProduct = false;
         state.image = action.payload.data;
       })
       .addCase(imageUploadThunk.rejected, (state) => {
-        console.log("rejected");
-        state.isLoading = false;
+        console.log("rejected imageUploadThunk");
+        state.isLoadingProduct = false;
       })
       .addCase(addProductThunk.pending, (state) => {
-        console.log("pending");
-        state.isLoading = true;
+        console.log("pending addProductThunk");
+        state.isLoadingProduct = true;
       })
       .addCase(addProductThunk.fulfilled, (state, action) => {
-        console.log("fulfilled");
-        state.isLoading = false;
+        console.log("fulfilled addProductThunk");
+        state.isLoadingProduct = false;
         state.product = action.payload.data;
       })
       .addCase(addProductThunk.rejected, (state) => {
-        console.log("rejected");
-        state.isLoading = false;
+        console.log("rejected addProductThunk");
+        state.isLoadingProduct = false;
       })
       .addCase(fetchAllProductThunk.pending, (state) => {
         console.log("pending fetchAllProductThunk");
-        state.isLoading = true;
+        state.isLoadingProduct = true;
       })
       .addCase(fetchAllProductThunk.fulfilled, (state, action) => {
         console.log("fulfilled fetchAllProductThunk");
-        state.isLoading = false;
+        state.isLoadingProduct = false;
         state.productList = action.payload.data;
       })
       .addCase(fetchAllProductThunk.rejected, (state) => {
         console.log("rejected fetchAllProductThunk");
-        state.isLoading = false;
+        state.isLoadingProduct = false;
       })
       .addCase(deleteProductThunk.pending, (state) => {
         console.log("pending");
-        state.isLoading = true;
+        state.isLoadingProduct = true;
       })
       .addCase(deleteProductThunk.fulfilled, (state, action) => {
         console.log("fulfilled");
-        state.isLoading = false;
+        state.isLoadingProduct = false;
         state.product = action.payload.data;
       })
       .addCase(deleteProductThunk.rejected, (state) => {
         console.log("rejected");
-        state.isLoading = false;
+        state.isLoadingProduct = false;
       })
       .addCase(editProductThunk.pending, (state) => {
         console.log("pending");
-        state.isLoading = true;
+        state.isLoadingProduct = true;
       })
       .addCase(editProductThunk.fulfilled, (state, action) => {
         console.log("fulfilled");
-        state.isLoading = false;
+        state.isLoadingProduct = false;
         state.product = action.payload.data;
       })
       .addCase(editProductThunk.rejected, (state) => {
         console.log("rejected");
-        state.isLoading = false;
+        state.isLoadingProduct = false;
       });
   },
 });

@@ -42,7 +42,7 @@ const AdminProducts = () => {
   const [openSideDashboard, setOpenSideDashboard] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   // const [formData, setFormData] = useState(initialFormData.initialValues);
-  const { isLoading } = useSelector((state) => state.product);
+  const { isLoadingProduct } = useSelector((state) => state.product);
   const inputImgRef = useRef(null);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -122,21 +122,21 @@ const AdminProducts = () => {
     queryKey: ["fetchAllProduct"],
   });
   return (
-    <div className="p-1 md:p-3">
-      <div className="w-full h-fit flex justify-end items-center">
+    <div className="">
+      <div className="w-full h-fit flex justify-end items-center p-2 md:p-4">
         <Button onClick={() => setOpenSideDashboard((state) => !state)}>
           Add New Product
         </Button>
       </div>
-      {isLoading ? (
-        <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4 p-4">
+      {isLoadingProduct ? (
+        <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4 p-2 md:p-4">
           <SkeletonCard />
           <SkeletonCard />
           <SkeletonCard />
           <SkeletonCard />
         </div>
       ) : (
-        <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4">
+        <div className="w-full h-fit grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3 mt-3 gap-2 md:gap-4 p-2 md:p-4">
           {fetchAllProduct?.data?.payload ? (
             fetchAllProduct?.data?.payload?.data.map((product) => {
               return (
@@ -180,7 +180,7 @@ const AdminProducts = () => {
             formData={initialFormData.values}
             setFormData={initialFormData.setValues}
             onSubmit={handleSubmit}
-            isLoading={isLoading}
+            isLoading={isLoadingProduct}
             inputRef={inputImgRef}
             currentEditedId={currentEditedId}
           />
