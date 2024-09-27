@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-item";
-// import UserCartItemsContent from "./cart-items-content";
+import proptypes from "prop-types";
 
 const UserCartWrapper = ({ currentCart, setOpenCartSheet }) => {
   const navigate = useNavigate();
@@ -49,6 +49,11 @@ const UserCartWrapper = ({ currentCart, setOpenCartSheet }) => {
       </Button>
     </SheetContent>
   );
+};
+
+UserCartWrapper.propTypes = {
+  currentCart: proptypes.array,
+  setOpenCartSheet: proptypes.any,
 };
 
 export default UserCartWrapper;

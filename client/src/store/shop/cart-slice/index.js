@@ -63,6 +63,27 @@ export const updateCartQuantity = createAsyncThunk(
   }
 );
 
+export const deleteCartItem = createAsyncThunk(
+  "/cart/delete",
+  async ({ userId, productId }, { rejectWithValue }) => {
+    try {
+      const result = await axios.delete(
+        `${apiBaseUrl}/cart/${userId}/${productId}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      return result?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
 const cartSlice = createSlice({
   initialState,
   name: "cart",
@@ -112,6 +133,20 @@ const cartSlice = createSlice({
         state.currentCart = action.payload.data;
       })
       .addCase(updateCartQuantity.rejected, (state) => {
+        console.log("rejected, update cart item");
+        state.isLoadingCart = false;
+        state.currentCart = [];
+      })
+      .addCase(deleteCartItem.pending, (state) => {
+        console.log("pending, update cart item");
+        state.isLoadingCart = true;
+      })
+      .addCase(deleteCartItem.fulfilled, (state, action) => {
+        console.log("fulfilled, update cart item");
+        state.isLoadingCart = false;
+        state.currentCart = action.payload.data;
+      })
+      .addCase(deleteCartItem.rejected, (state) => {
         console.log("rejected, update cart item");
         state.isLoadingCart = false;
         state.currentCart = [];

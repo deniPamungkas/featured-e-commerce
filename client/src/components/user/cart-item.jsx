@@ -2,18 +2,14 @@ import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "@/hooks/use-toast";
-import { updateCartQuantity } from "@/store/shop/cart-slice";
-// import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
-// import { useToast } from "../ui/use-toast";
+import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
+import proptypes from "prop-types";
 
 const UserCartItemsContent = ({ cartItem }) => {
   const { user } = useSelector((state) => state.auth);
   const { currentCart } = useSelector((state) => state.shopCart);
   const { productList } = useSelector((state) => state.shopProduct);
   const dispatch = useDispatch();
-  //   const { toast } = useToast();
-
-  //   console.log(productList);
   console.log(currentCart);
 
   const handleUpdateQuantity = (getCartItem, typeOfAction) => {
@@ -68,17 +64,17 @@ const UserCartItemsContent = ({ cartItem }) => {
       }
     });
   };
-  // const handleCartItemDelete = (getCartItem) => {
-  //   //     di =>spatch(
-  //   //       deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
-  //   //     ).then((data) => {
-  //   //       if (data?.payload?.success) {
-  //   //         toast({
-  //   //           title: "Cart item is deleted successfully",
-  //   //         });
-  //   //       }
-  //   //     });
-  //     }
+  const handleCartItemDelete = (getCartItem) => {
+    dispatch(
+      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        toast({
+          title: "Cart item is deleted successfully",
+        });
+      }
+    });
+  };
 
   return (
     <div className="flex items-center space-x-4">
@@ -121,13 +117,17 @@ const UserCartItemsContent = ({ cartItem }) => {
           ).toFixed(2)}
         </p>
         <Trash
-          //   onClick={() => handleCartItemDelete(cartItem)}
+          onClick={() => handleCartItemDelete(cartItem)}
           className="cursor-pointer mt-1"
           size={20}
         />
       </div>
     </div>
   );
+};
+
+UserCartItemsContent.propTypes = {
+  cartItem: proptypes.object,
 };
 
 export default UserCartItemsContent;
