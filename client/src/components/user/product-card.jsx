@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config/constants.js";
 import { Badge } from "../ui/badge";
 import proptypes from "prop-types";
+import CustomButton from "../common/button";
 
 const ShoppingProductCard = ({
   product,
@@ -64,13 +65,11 @@ const ShoppingProductCard = ({
             Out Of Stock
           </Button>
         ) : (
-          <Button
-            // onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-            onClick={() => {}}
+          <CustomButton
+            onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
             className="w-full"
-          >
-            Add to cart
-          </Button>
+            buttonText="Add To Cart"
+          />
         )}
       </CardFooter>
     </Card>
@@ -81,6 +80,7 @@ ShoppingProductCard.propTypes = {
   product: proptypes.any,
   handleGetProductDetails: proptypes.any,
   handleAddtoCart: proptypes.any,
+  isLoading: proptypes.bool,
 };
 
 export default ShoppingProductCard;

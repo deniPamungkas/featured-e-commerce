@@ -25,6 +25,14 @@ export const addNewProduct = async (req, res) => {
       averageReview,
     } = req.body;
 
+    const isProductExist = await ProductSchema.findOne({ title });
+    if (isProductExist) {
+      return res.status(401).json({
+        success: false,
+        message: "Item with similar title is already exust",
+      });
+    }
+
     const newProduct = new ProductSchema({
       image,
       title,

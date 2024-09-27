@@ -26,12 +26,13 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 // import UserCartWrapper from "./cart-wrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { shoppingViewHeaderMenuItems } from "@/config/constants";
 import { logoutUser } from "@/store/auth-slice";
 import { toast } from "@/hooks/use-toast";
 import proptypes from "prop-types";
+import { fetchCartItems } from "@/store/shop/cart-slice";
 
 const MenuItems = ({ setOpenSideMenuSheet = null }) => {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ MenuItems.propTypes = {
 
 const HeaderRightContent = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
-  // const { cartItems } = useSelector((state) => state.shopCart);
+  const { currentCart } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -105,11 +106,9 @@ const HeaderRightContent = () => {
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchCartItems(user?.id));
-  // }, [dispatch]);
-
-  // console.log(cartItems, "sangam");
+  useEffect(() => {
+    dispatch(fetchCartItems(user?.id));
+  }, [dispatch, user]);
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
@@ -122,7 +121,7 @@ const HeaderRightContent = () => {
         >
           <ShoppingCart className="w-6 h-6" />
           <span className="absolute top-[-5px] right-[2px] font-bold text-sm">
-            {/* {cartItems?.items?.length || 0} */}0
+            {currentCart?.items?.length || 0}
           </span>
           <span className="sr-only">User cart</span>
         </Button>

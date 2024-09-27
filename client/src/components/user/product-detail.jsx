@@ -23,12 +23,15 @@ import {
 } from "@/store/shop/review-slice";
 import StarRatingComponent from "../common/star-rating";
 import CustomButton from "../common/button";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { currentCart, isLoadingCart } = useSelector((state) => state.shopCart);
+
   //   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews, isLoading } = useSelector((state) => state.productReview);
 
@@ -36,40 +39,49 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     setRating(getRating);
   };
 
-  //   const handleAddToCart = (getCurrentProductId, getTotalStock) => {
-  //     let getCartItems = cartItems.items || [];
+  const handleAddtoCart = async (getCurrentProductId, getTotalStock) => {
+    try {
+      let getCartItems = currentCart.items || [];
 
-  //     if (getCartItems.length) {
-  //       const indexOfCurrentItem = getCartItems.findIndex(
-  //         (item) => item.productId === getCurrentProductId
-  //       );
-  //       if (indexOfCurrentItem > -1) {
-  //         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
-  //         if (getQuantity + 1 > getTotalStock) {
-  //           toast({
-  //             title: `Only ${getQuantity} quantity can be added for this item`,
-  //             variant: "destructive",
-  //           });
+      if (getCartItems.length) {
+        const indexOfCurrentItem = getCartItems.findIndex(
+          (item) => item.productId === getCurrentProductId
+        );
+        if (indexOfCurrentItem > -1) {
+          const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+          if (getQuantity + 1 > getTotalStock) {
+            toast({
+              title: `Only ${getQuantity} quantity can be added for this item`,
+              variant: "destructive",
+            });
 
-  //           return;
-  //         }
-  //       }
-  //     }
-  //     dispatch(
-  //       addToCart({
-  //         userId: user?.id,
-  //         productId: getCurrentProductId,
-  //         quantity: 1,
-  //       })
-  //     ).then((data) => {
-  //       if (data?.payload?.success) {
-  //         dispatch(fetchCartItems(user?.id));
-  //         toast({
-  //           title: "Product is added to cart",
-  //         });
-  //       }
-  //     });
-  //   };
+            return;
+          }
+        }
+      }
+
+      dispatch(
+        addToCart({
+          userId: user?.id,
+          productId: getCurrentProductId,
+          quantity: 1,
+        })
+      ).then(async (data) => {
+        if (data?.payload?.success) {
+          await dispatch(fetchCartItems(user?.id));
+          toast({
+            title: "Product is added to cart",
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "failed to add product, please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleDialogClose = () => {
     setOpen(false);
@@ -179,14 +191,15 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
               </Button>
             ) : (
               <CustomButton
+                isLoading={isLoadingCart}
                 className="w-full"
                 buttonText="Add To Cart"
-                // onClick={() =>
-                //   handleAddToCart(
-                //     productDetails?._id,
-                //     productDetails?.totalStock
-                //   )
-                // }
+                onClick={() =>
+                  handleAddtoCart(
+                    productDetails?._id,
+                    productDetails?.totalStock
+                  )
+                }
               />
             )}
           </div>

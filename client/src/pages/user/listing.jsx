@@ -11,6 +11,8 @@ import ProductFilter from "@/components/user/filter";
 import ShoppingProductCard from "@/components/user/product-card";
 import ProductDetailsDialog from "@/components/user/product-detail";
 import { sortOptions } from "@/config/constants";
+import { toast } from "@/hooks/use-toast";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import {
   fetchAllFilteredProducts,
   fetchProductDetails,
@@ -24,6 +26,9 @@ const UserListing = () => {
   const { productList, isLoading, productDetails } = useSelector(
     (state) => state.shopProduct
   );
+  const { currentCart } = useSelector((state) => state.shopCart);
+  const { user } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
@@ -70,6 +75,50 @@ const UserListing = () => {
 
   const handleGetProductDetails = (productId) => {
     dispatch(fetchProductDetails(productId));
+  };
+
+  const handleAddtoCart = async (getCurrentProductId, getTotalStock) => {
+    try {
+      let getCartItems = currentCart.items || [];
+
+      if (getCartItems.length) {
+        const indexOfCurrentItem = getCartItems.findIndex(
+          (item) => item.productId === getCurrentProductId
+        );
+        if (indexOfCurrentItem > -1) {
+          const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+          if (getQuantity + 1 > getTotalStock) {
+            toast({
+              title: `Only ${getQuantity} quantity can be added for this item`,
+              variant: "destructive",
+            });
+
+            return;
+          }
+        }
+      }
+
+      dispatch(
+        addToCart({
+          userId: user?.id,
+          productId: getCurrentProductId,
+          quantity: 1,
+        })
+      ).then(async (data) => {
+        if (data?.payload?.success) {
+          await dispatch(fetchCartItems(user?.id));
+          toast({
+            title: "Product is added to cart",
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "failed to add product, please try again",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
@@ -149,7 +198,7 @@ const UserListing = () => {
                     key={productItem.title}
                     handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
-                    // handleAddtoCart={handleAddtoCart}
+                    handleAddtoCart={handleAddtoCart}
                   />
                 ))
               : null}
