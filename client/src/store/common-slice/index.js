@@ -1,3 +1,4 @@
+import { apiBaseUrl } from "@/config/constants";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -9,7 +10,7 @@ const initialState = {
 export const getFeatureImages = createAsyncThunk(
   "/order/getFeatureImages",
   async () => {
-    const response = await axios.get(`http://localhost:3000/feature`, {
+    const response = await axios.get(`${apiBaseUrl}/feature`, {
       withCredentials: true,
     });
 
@@ -21,7 +22,7 @@ export const addFeatureImage = createAsyncThunk(
   "/order/addFeatureImage",
   async (image) => {
     const response = await axios.post(
-      `http://localhost:3000/feature`,
+      `${apiBaseUrl}/feature`,
       { image },
       { withCredentials: true }
     );
