@@ -8,6 +8,6 @@ import {
 const route = Router();
 
 route.post("/", auth, addFeatureImage);
-route.get("/", auth, getFeatureImages);
+route.get("/", getFeatureImages);
 
 export default route;

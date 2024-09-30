@@ -28,13 +28,14 @@ export const addToCart = createAsyncThunk(
 export const fetchCartItems = createAsyncThunk(
   "/cart/get",
   async (id, { rejectWithValue }) => {
-    console.log(id);
     try {
-      const result = await axios.get(`${apiBaseUrl}/cart/${id}`, {
-        withCredentials: true,
-      });
+      if (id) {
+        const result = await axios.get(`${apiBaseUrl}/cart/${id}`, {
+          withCredentials: true,
+        });
 
-      return result?.data;
+        return result?.data;
+      }
     } catch (error) {
       console.log(error);
       return rejectWithValue(
@@ -115,8 +116,9 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         console.log("fulfilled, get cart items");
+        console.log(action.payload, "get cart items action");
         state.isLoadingCart = false;
-        state.currentCart = action.payload.data;
+        state.currentCart = action?.payload?.data;
       })
       .addCase(fetchCartItems.rejected, (state) => {
         console.log("rejected, get cart items");

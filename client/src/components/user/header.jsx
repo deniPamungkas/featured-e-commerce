@@ -37,28 +37,19 @@ import UserCartWrapper from "./cart-wrapper";
 
 const MenuItems = ({ setOpenSideMenuSheet = null }) => {
   const navigate = useNavigate();
-  // const location = useLocation();
-  // const [searchParams, setSearchParams] = useSearchParams();
 
-  // function handleNavigate(getCurrentMenuItem) {
-  //   sessionStorage.removeItem("filters");
-  //   const currentFilter =
-  //     getCurrentMenuItem.id !== "home" &&
-  //     getCurrentMenuItem.id !== "products" &&
-  //     getCurrentMenuItem.id !== "search"
-  //       ? {
-  //           category: [getCurrentMenuItem.id],
-  //         }
-  //       : null;
-
-  //   sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-
-  //   location.pathname.includes("listing") && currentFilter !== null
-  //     ? setSearchParams(
-  //         new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
-  //       )
-  //     : navigate(getCurrentMenuItem.path);
-  // }
+  const handleNavigateCategory = (menuItemId) => {
+    if (
+      menuItemId !== "products" &&
+      menuItemId !== "home" &&
+      menuItemId !== "search"
+    ) {
+      window.sessionStorage.setItem(
+        "filters",
+        JSON.stringify({ category: [menuItemId] })
+      );
+    }
+  };
 
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
@@ -66,6 +57,7 @@ const MenuItems = ({ setOpenSideMenuSheet = null }) => {
         <Label
           onClick={() => {
             navigate(menuItem.path);
+            handleNavigateCategory(menuItem.id);
             setOpenSideMenuSheet ? setOpenSideMenuSheet(false) : null;
           }}
           className="text-sm font-medium cursor-pointer"
@@ -82,7 +74,7 @@ MenuItems.propTypes = {
   setOpenSideMenuSheet: proptypes.any,
 };
 
-const HeaderRightContent = () => {
+const HeaderRightContent = ({ setOpenSideMenuSheet }) => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { currentCart } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
@@ -108,14 +100,17 @@ const HeaderRightContent = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchCartItems(user?.id));
+    dispatch(fetchCartItems(user?._id));
   }, [dispatch, user]);
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
-          onClick={() => setOpenCartSheet(true)}
+          onClick={() => {
+            setOpenCartSheet(true);
+            setOpenSideMenuSheet ? setOpenSideMenuSheet(false) : null;
+          }}
           variant="outline"
           size="icon"
           className="relative"
@@ -183,6 +178,10 @@ const HeaderRightContent = () => {
   );
 };
 
+HeaderRightContent.propTypes = {
+  setOpenSideMenuSheet: proptypes.any,
+};
+
 const ShoppingHeader = () => {
   const [openSideMenuSheet, setOpenSideMenuSheet] = useState(false);
 
@@ -216,7 +215,7 @@ const ShoppingHeader = () => {
               </SheetDescription>
             </SheetHeader>
             <MenuItems setOpenSideMenuSheet={setOpenSideMenuSheet} />
-            <HeaderRightContent />
+            <HeaderRightContent setOpenSideMenuSheet={setOpenSideMenuSheet} />
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">

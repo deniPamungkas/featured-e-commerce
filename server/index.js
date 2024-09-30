@@ -9,6 +9,7 @@ import shopProductRoute from "./routes/shop/shop-product-routes.js";
 import productReviewRoute from "./routes/shop/product-review-routes.js";
 import cartRoute from "./routes/shop/cart-routes.js";
 import featureRoute from "./routes/common/feature-image-routes.js";
+import addressRoute from "./routes/shop/address-routes.js";
 import "./config/passport.js";
 
 const app = express();
@@ -38,6 +39,7 @@ app.use("/shop", shopProductRoute);
 app.use("/review", productReviewRoute);
 app.use("/cart", cartRoute);
 app.use("/feature", featureRoute);
+app.use("/address", addressRoute);
 
 app.listen(3000, () => {
   console.log("server is running on port 3000");

@@ -10,7 +10,6 @@ const UserCartItemsContent = ({ cartItem }) => {
   const { currentCart } = useSelector((state) => state.shopCart);
   const { productList } = useSelector((state) => state.shopProduct);
   const dispatch = useDispatch();
-  console.log(currentCart);
 
   const handleUpdateQuantity = (getCartItem, typeOfAction) => {
     if (typeOfAction == "plus") {
