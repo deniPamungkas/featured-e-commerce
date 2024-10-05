@@ -208,8 +208,34 @@ export const getOrderDetails = async (req, res) => {
   }
 };
 
-const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
-  let responseData = null;
+// const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
+//   let responseData = null;
+//   let transactionStatus = data.transaction_status;
+//   let fraudStatus = data.fraud_status;
+
+//   if (transactionStatus == "capture") {
+//     if (fraudStatus == "accept") {
+
+//     }
+//   } else if (transactionStatus == "settlement") {
+//     // TODO set transaction status on your database to 'success'
+//     // and response with 200 OK
+//   } else if (
+//     transactionStatus == "cancel" ||
+//     transactionStatus == "deny" ||
+//     transactionStatus == "expire"
+//   ) {
+//     // TODO set transaction status on your database to 'failure'
+//     // and response with 200 OK
+//   } else if (transactionStatus == "pending") {
+//     // TODO set transaction status on your database to 'pending' / waiting payment
+//     // and response with 200 OK
+//   }
+// };
+
+export const trxNotif = async (req, res) => {
+  // const data = req.body;
+
   let transactionStatus = data.transaction_status;
   let fraudStatus = data.fraud_status;
 
@@ -226,11 +252,14 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
         });
       }
 
+      console.log({ order });
+
       order.paymentStatus = "paid";
       order.orderStatus = "confirmed";
 
       for (let item of order.cartItems) {
         let product = await ProductSchema.findById(item.id);
+        console.log({ product });
 
         if (!product) {
           return res.status(404).json({
@@ -248,67 +277,89 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
       await CartSchema.findByIdAndDelete(getCartId);
 
       await order.save();
-
-      return res.status(200).json({
-        message: "success",
-        data: order,
-      });
     }
   } else if (transactionStatus == "settlement") {
-    // TODO set transaction status on your database to 'success'
-    // and response with 200 OK
+    const { order_id } = req.body;
+
+    let order = await OrderSchema.findById(order_id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order can not be found",
+      });
+    }
+
+    console.log({ order });
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+
+    for (let item of order.cartItems) {
+      let product = await ProductSchema.findById(item.id);
+      console.log({ product });
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Not enough stock for this product ${product.title}`,
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
+
+    const getCartId = order.cartId;
+    await CartSchema.findByIdAndDelete(getCartId);
+
+    await order.save();
   } else if (
     transactionStatus == "cancel" ||
     transactionStatus == "deny" ||
     transactionStatus == "expire"
   ) {
-    // TODO set transaction status on your database to 'failure'
-    // and response with 200 OK
+    const { order_id } = req.body;
+
+    let order = await OrderSchema.findById(order_id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order can not be found",
+      });
+    }
+
+    console.log({ order });
+
+    order.paymentStatus = transactionStatus;
+    order.orderStatus = "rejected";
+
+    for (let item of order.cartItems) {
+      let product = await ProductSchema.findById(item.id);
+      console.log({ product });
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Not enough stock for this product ${product.title}`,
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
+
+    const getCartId = order.cartId;
+    await CartSchema.findByIdAndDelete(getCartId);
+
+    await order.save();
   } else if (transactionStatus == "pending") {
     // TODO set transaction status on your database to 'pending' / waiting payment
     // and response with 200 OK
   }
-};
-
-export const trxNotif = async (req, res) => {
-  // const data = req.body;
-
-  const { order_id } = req.body;
-
-  let order = await OrderSchema.findById(order_id);
-
-  if (!order) {
-    return res.status(404).json({
-      success: false,
-      message: "Order can not be found",
-    });
-  }
-
-  console.log({ order });
-
-  order.paymentStatus = "paid";
-  order.orderStatus = "confirmed";
-
-  for (let item of order.cartItems) {
-    let product = await ProductSchema.findById(item.id);
-    console.log({ product });
-
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: `Not enough stock for this product ${product.title}`,
-      });
-    }
-
-    product.totalStock -= item.quantity;
-
-    await product.save();
-  }
-
-  const getCartId = order.cartId;
-  await CartSchema.findByIdAndDelete(getCartId);
-
-  await order.save();
 
   return res.status(200).json({
     success: true,
