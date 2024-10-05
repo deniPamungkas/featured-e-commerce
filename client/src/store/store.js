@@ -6,6 +6,8 @@ import productReviewSlice from "./shop/review-slice/index";
 import cartSlice from "./shop/cart-slice/index";
 import commonSlice from "./common-slice";
 import addressSlice from "./shop/address-slice";
+import orderSlice from "./shop/order-slice";
+import adminOrderSlice from "./order-slice";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +20,8 @@ const store = configureStore({
     address: addressSlice,
 
     common: commonSlice,
+    order: orderSlice,
+    adminOrder: adminOrderSlice,
   },
 });
 

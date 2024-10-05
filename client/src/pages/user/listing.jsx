@@ -100,13 +100,13 @@ const UserListing = () => {
 
       dispatch(
         addToCart({
-          userId: user?.id,
+          userId: user?._id,
           productId: getCurrentProductId,
           quantity: 1,
         })
       ).then(async (data) => {
         if (data?.payload?.success) {
-          await dispatch(fetchCartItems(user?.id));
+          await dispatch(fetchCartItems(user?._id));
           toast({
             title: "Product is added to cart",
           });

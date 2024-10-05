@@ -1,17 +1,17 @@
 import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "../ui/use-toast";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
-import proptypes from "prop-types";
 
-const UserCartItemsContent = ({ cartItem }) => {
+function UserCartItemsContent({ cartItem }) {
   const { user } = useSelector((state) => state.auth);
   const { currentCart } = useSelector((state) => state.shopCart);
-  const { productList } = useSelector((state) => state.shopProduct);
+  const { productList } = useSelector((state) => state.shopProducts);
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
-  const handleUpdateQuantity = (getCartItem, typeOfAction) => {
+  function handleUpdateQuantity(getCartItem, typeOfAction) {
     if (typeOfAction == "plus") {
       let getCartItems = currentCart.items || [];
 
@@ -23,8 +23,9 @@ const UserCartItemsContent = ({ cartItem }) => {
         const getCurrentProductIndex = productList.findIndex(
           (product) => product._id === getCartItem?.productId
         );
-
         const getTotalStock = productList[getCurrentProductIndex].totalStock;
+
+        console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
 
         if (indexOfCurrentCartItem > -1) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
@@ -56,8 +57,9 @@ const UserCartItemsContent = ({ cartItem }) => {
         });
       }
     });
-  };
-  const handleCartItemDelete = (getCartItem) => {
+  }
+
+  function handleCartItemDelete(getCartItem) {
     dispatch(
       deleteCartItem({ userId: user?._id, productId: getCartItem?.productId })
     ).then((data) => {
@@ -67,7 +69,7 @@ const UserCartItemsContent = ({ cartItem }) => {
         });
       }
     });
-  };
+  }
 
   return (
     <div className="flex items-center space-x-4">
@@ -117,10 +119,6 @@ const UserCartItemsContent = ({ cartItem }) => {
       </div>
     </div>
   );
-};
-
-UserCartItemsContent.propTypes = {
-  cartItem: proptypes.object,
-};
+}
 
 export default UserCartItemsContent;

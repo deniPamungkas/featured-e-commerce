@@ -34,6 +34,7 @@ import { toast } from "@/hooks/use-toast";
 import proptypes from "prop-types";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import UserCartWrapper from "./cart-wrapper";
+import { fetchAllFilteredProducts } from "@/store/shop/product-slice";
 
 const MenuItems = ({ setOpenSideMenuSheet = null }) => {
   const navigate = useNavigate();
@@ -101,6 +102,12 @@ const HeaderRightContent = ({ setOpenSideMenuSheet }) => {
 
   useEffect(() => {
     dispatch(fetchCartItems(user?._id));
+    dispatch(
+      fetchAllFilteredProducts({
+        filterParams: { category: [], brand: [] },
+        sortParams: null,
+      })
+    );
   }, [dispatch, user]);
 
   return (

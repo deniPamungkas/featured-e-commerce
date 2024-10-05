@@ -129,7 +129,8 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
     dispatch(fetchAddresses(user?._id));
   }, [dispatch, user]);
 
-  console.log(addressList);
+  // console.log(addressList);
+  // console.log(selectedId, "selectedId");
 
   return (
     <Card>

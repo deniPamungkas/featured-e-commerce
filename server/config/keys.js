@@ -12,6 +12,9 @@ const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 const cloudKey = process.env.CLOUDINARY_API_KEY;
 const cloudSecret = process.env.CLOUDINARY_API_SECRET;
 
+const midtransSecret = process.env.MIDTRANS_SERVER_KEY;
+const midtransClientSecret = process.env.MIDTRANS_CLIENT_KEY;
+
 export default {
   port,
   dburl,
@@ -20,4 +23,6 @@ export default {
   cloudName,
   cloudKey,
   cloudSecret,
+  midtransSecret,
+  midtransClientSecret,
 };

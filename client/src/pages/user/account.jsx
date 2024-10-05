@@ -1,10 +1,21 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import accImg from "../../assets/account.jpg";
 import Address from "@/components/user/address";
+import ShoppingOrders from "@/components/user/orders";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllOrdersByUser } from "@/store/shop/order-slice";
 // import Address from "@/components/shopping-view/address";
 // import ShoppingOrders from "@/components/shopping-view/orders";
 
-function ShoppingAccount() {
+const ShoppingAccount = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(getAllOrdersByUser(user?._id));
+  }, [dispatch, user]);
+
   return (
     <div className="flex flex-col">
       <div className="relative h-[300px] w-full overflow-hidden">
@@ -20,7 +31,9 @@ function ShoppingAccount() {
               <TabsTrigger value="orders">Orders</TabsTrigger>
               <TabsTrigger value="address">Address</TabsTrigger>
             </TabsList>
-            <TabsContent value="orders">{/* <ShoppingOrders /> */}</TabsContent>
+            <TabsContent value="orders">
+              <ShoppingOrders />
+            </TabsContent>
             <TabsContent value="address">
               <Address />
             </TabsContent>
@@ -29,6 +42,6 @@ function ShoppingAccount() {
       </div>
     </div>
   );
-}
+};
 
 export default ShoppingAccount;

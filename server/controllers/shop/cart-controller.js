@@ -75,7 +75,7 @@ export const fetchCartItems = async (req, res) => {
     const { userId } = req.params;
     const cart = await CartSchema.findOne({ userId }).populate({
       path: "items.productId",
-      select: "salePrice price image title",
+      select: "salePrice price image title brand category",
     });
 
     if (!cart) {
@@ -101,6 +101,8 @@ export const fetchCartItems = async (req, res) => {
       price: item.productId.price,
       salePrice: item.productId.salePrice,
       quantity: item.quantity,
+      brand: item.productId.brand,
+      category: item.productId.category,
     }));
 
     return res.status(200).json({

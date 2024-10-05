@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Label } from "../ui/label";
+import proptypes from "prop-types";
 
 const AddressCard = ({
   addressInfo,
@@ -35,6 +36,14 @@ const AddressCard = ({
       </CardFooter>
     </Card>
   );
+};
+
+AddressCard.propTypes = {
+  addressInfo: proptypes.any,
+  handleDeleteAddress: proptypes.any,
+  handleEditAddress: proptypes.any,
+  setCurrentSelectedAddress: proptypes.any,
+  selectedId: proptypes.any,
 };
 
 export default AddressCard;

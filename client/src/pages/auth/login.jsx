@@ -3,6 +3,7 @@ import { loginFormControl } from "@/config/constants";
 import { toast } from "@/hooks/use-toast";
 import { loginUser } from "@/store/auth-slice";
 import { fetchCartItems } from "@/store/shop/cart-slice";
+import { fetchAllFilteredProducts } from "@/store/shop/product-slice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -31,6 +32,12 @@ const Login = () => {
         return res;
       }
       dispatch(fetchCartItems(res.payload.user.id));
+      dispatch(
+        fetchAllFilteredProducts({
+          filterParams: { category: [], brand: [] },
+          sortParams: null,
+        })
+      );
       navigate("/");
     } catch (error) {
       console.log(error);
