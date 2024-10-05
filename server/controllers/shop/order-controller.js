@@ -240,7 +240,6 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
         }
 
         product.totalStock -= item.quantity;
-        console.log(product);
 
         await product.save();
       }
@@ -250,7 +249,10 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
 
       await order.save();
 
-      console.log(data);
+      return res.status(200).json({
+        message: "success",
+        data: order,
+      });
     }
   } else if (transactionStatus == "settlement") {
     // TODO set transaction status on your database to 'success'
