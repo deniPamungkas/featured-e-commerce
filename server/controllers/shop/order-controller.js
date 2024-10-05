@@ -240,6 +240,7 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
         }
 
         product.totalStock -= item.quantity;
+        console.log(product);
 
         await product.save();
       }
