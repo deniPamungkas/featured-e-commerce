@@ -234,7 +234,7 @@ export const getOrderDetails = async (req, res) => {
 // };
 
 export const trxNotif = async (req, res) => {
-  // const data = req.body;
+  const data = req.body;
 
   let transactionStatus = data.transaction_status;
   let fraudStatus = data.fraud_status;
