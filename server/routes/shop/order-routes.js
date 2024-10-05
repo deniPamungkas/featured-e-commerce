@@ -6,6 +6,7 @@ import {
   failedPayment,
   getAllOrdersByUser,
   getOrderDetails,
+  trxNotif,
 } from "../../controllers/shop/order-controller.js";
 
 const route = Router();
@@ -15,5 +16,6 @@ route.get("/capturePayment", auth, capturePayment);
 route.get("/failedPayment", auth, failedPayment);
 route.get("/:userId", auth, getAllOrdersByUser);
 route.get("/details/:id", auth, getOrderDetails);
+route.get("/midtrans-response-status", trxNotif);
 
 export default route;
