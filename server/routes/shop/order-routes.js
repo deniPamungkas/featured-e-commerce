@@ -16,6 +16,6 @@ route.get("/capturePayment", auth, capturePayment);
 route.get("/failedPayment", auth, failedPayment);
 route.get("/:userId", auth, getAllOrdersByUser);
 route.get("/details/:id", auth, getOrderDetails);
-route.get("/midtrans/response-status", trxNotif);
+route.post("/midtrans/response-status", trxNotif);
 
 export default route;
