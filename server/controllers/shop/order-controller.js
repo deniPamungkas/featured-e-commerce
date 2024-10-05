@@ -215,6 +215,41 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
 
   if (transactionStatus == "capture") {
     if (fraudStatus == "accept") {
+      const { order_id } = req.body;
+
+      let order = await OrderSchema.findById(order_id);
+
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Order can not be found",
+        });
+      }
+
+      order.paymentStatus = "paid";
+      order.orderStatus = "confirmed";
+
+      for (let item of order.cartItems) {
+        let product = await ProductSchema.findById(item.id);
+
+        if (!product) {
+          return res.status(404).json({
+            success: false,
+            message: `Not enough stock for this product ${product.title}`,
+          });
+        }
+
+        product.totalStock -= item.quantity;
+
+        await product.save();
+      }
+
+      const getCartId = order.cartId;
+      await CartSchema.findByIdAndDelete(getCartId);
+
+      await order.save();
+
+      console.log(data);
     }
   } else if (transactionStatus == "settlement") {
     // TODO set transaction status on your database to 'success'
@@ -235,7 +270,7 @@ const updateStatusBasedOnMistransResponse = async (transaction_id, data) => {
 export const trxNotif = async (req, res) => {
   const data = req.body;
 
-  console.log(data);
+  updateStatusBasedOnMistransResponse(data.transaction_id, data);
 
   return res.status(200).json({
     success: true,
