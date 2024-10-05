@@ -114,7 +114,7 @@ export const capturePayment = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    return res.status(500).json({
+    return res.status(555).json({
       success: false,
       message: "Some error occured!",
     });
