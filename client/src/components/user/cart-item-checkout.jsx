@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "../ui/use-toast";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
 
-function UserCartItemsContent({ cartItem }) {
+const UserCartItemsContent = ({ cartItem }) => {
   const { user } = useSelector((state) => state.auth);
   const { currentCart } = useSelector((state) => state.shopCart);
   const { productList } = useSelector((state) => state.shopProducts);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  function handleUpdateQuantity(getCartItem, typeOfAction) {
+  const handleUpdateQuantity = (getCartItem, typeOfAction) => {
     if (typeOfAction == "plus") {
       let getCartItems = currentCart.items || [];
 
@@ -57,9 +57,9 @@ function UserCartItemsContent({ cartItem }) {
         });
       }
     });
-  }
+  };
 
-  function handleCartItemDelete(getCartItem) {
+  const handleCartItemDelete = (getCartItem) => {
     dispatch(
       deleteCartItem({ userId: user?._id, productId: getCartItem?.productId })
     ).then((data) => {
@@ -69,7 +69,7 @@ function UserCartItemsContent({ cartItem }) {
         });
       }
     });
-  }
+  };
 
   return (
     <div className="flex items-center space-x-4">
@@ -119,6 +119,6 @@ function UserCartItemsContent({ cartItem }) {
       </div>
     </div>
   );
-}
+};
 
 export default UserCartItemsContent;

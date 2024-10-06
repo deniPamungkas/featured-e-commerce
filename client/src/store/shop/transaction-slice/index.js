@@ -25,6 +25,23 @@ export const createTransaction = createAsyncThunk(
   }
 );
 
+export const getTransactionByUserId = createAsyncThunk(
+  "/transaction/get-by-user",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const result = await axios.get(`${apiBaseUrl}/transaction/${userId}`, {
+        withCredentials: true,
+      });
+
+      return result?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.response.data
+      );
+    }
+  }
+);
+
 const transactionSlice = createSlice({
   initialState,
   name: "Transaction",
@@ -42,12 +59,26 @@ const transactionSlice = createSlice({
       .addCase(createTransaction.fulfilled, (state, action) => {
         console.log("fulfilled, create Transaction");
         state.isLoadingTransaction = false;
-        state.TransactionDetails = action.payload.data;
+        state.transactionDetails = action.payload.data;
       })
       .addCase(createTransaction.rejected, (state) => {
         console.log("rejected, create Transaction");
         state.isLoadingTransaction = false;
-        state.TransactionDetails = null;
+        state.transactionDetails = null;
+      })
+      .addCase(getTransactionByUserId.pending, (state) => {
+        console.log("pending, get transaction by user");
+        state.isLoadingTransaction = true;
+      })
+      .addCase(getTransactionByUserId.fulfilled, (state, action) => {
+        console.log("fulfilled, get transaction by user");
+        state.isLoadingTransaction = false;
+        state.transactionList = action.payload.data;
+      })
+      .addCase(getTransactionByUserId.rejected, (state) => {
+        console.log("rejected, get transaction by user");
+        state.isLoadingTransaction = false;
+        state.transactionList = [];
       });
   },
 });

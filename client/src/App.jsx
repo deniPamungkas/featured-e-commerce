@@ -21,7 +21,7 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-function App() {
+const App = () => {
   const { isAuthenticated, user, isLoading, checkingAuth } = useSelector(
     (state) => state.auth
   );
@@ -103,6 +103,6 @@ function App() {
       </Routes>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;

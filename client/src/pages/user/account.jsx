@@ -5,8 +5,7 @@ import ShoppingOrders from "@/components/user/orders";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersByUser } from "@/store/shop/order-slice";
-// import Address from "@/components/shopping-view/address";
-// import ShoppingOrders from "@/components/shopping-view/orders";
+import { getTransactionByUserId } from "@/store/shop/transaction-slice";
 
 const ShoppingAccount = () => {
   const dispatch = useDispatch();
@@ -14,7 +13,24 @@ const ShoppingAccount = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersByUser(user?._id));
+    dispatch(getTransactionByUserId(user?._id));
   }, [dispatch, user]);
+
+  useEffect(() => {
+    const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransScriptUrl;
+
+    const myMidtransClientKey = "SB-Mid-client-yINSLtT_zGlQkfZc";
+    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col">

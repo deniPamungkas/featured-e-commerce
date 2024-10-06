@@ -4,7 +4,7 @@ import { imageUploadThunk } from "@/store/product-slice";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function AdminDashboard() {
+const AdminDashboard = () => {
   const [imageUpload, setImageUpload] = useState(null);
   const dispatch = useDispatch();
   const { featureImageList, isLoading } = useSelector((state) => state.common);
@@ -84,6 +84,6 @@ function AdminDashboard() {
       </div>
     </div>
   );
-}
+};
 
 export default AdminDashboard;

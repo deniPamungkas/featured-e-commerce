@@ -1,4 +1,4 @@
-export const apiBaseUrl = "https://featured-e-commerce-vaha.vercel.app";
+export const apiBaseUrl = "http://localhost:3000";
 // "http://localhost:3000";
 // https://featured-e-commerce-vaha.vercel.app
 

@@ -44,7 +44,7 @@ const brandsWithIcon = [
   { id: "zara", label: "Zara", icon: Images },
   { id: "h&m", label: "H&M", icon: Heater },
 ];
-function ShoppingHome() {
+const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
     (state) => state.shopProduct
@@ -58,7 +58,7 @@ function ShoppingHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  function handleNavigateToListingPage(getCurrentItem, section) {
+  const handleNavigateToListingPage = (getCurrentItem, section) => {
     sessionStorage.removeItem("filters");
     const currentFilter = {
       [section]: [getCurrentItem.id],
@@ -66,13 +66,13 @@ function ShoppingHome() {
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
     navigate(`/shop/listing`);
-  }
+  };
 
-  function handleGetProductDetails(getCurrentProductId) {
+  const handleGetProductDetails = (getCurrentProductId) => {
     dispatch(fetchProductDetails(getCurrentProductId));
-  }
+  };
 
-  function handleAddtoCart(getCurrentProductId) {
+  const handleAddtoCart = (getCurrentProductId) => {
     dispatch(
       addToCart({
         userId: user?._id,
@@ -87,7 +87,7 @@ function ShoppingHome() {
         });
       }
     });
-  }
+  };
 
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
@@ -225,6 +225,6 @@ function ShoppingHome() {
       />
     </div>
   );
-}
+};
 
 export default ShoppingHome;

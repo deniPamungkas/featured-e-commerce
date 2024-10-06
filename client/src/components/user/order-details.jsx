@@ -24,7 +24,12 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Price</p>
-            <Label>${orderDetails?.totalAmount}</Label>
+            <Label>
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              }).format(orderDetails?.totalAmount)}
+            </Label>
           </div>
           {/* <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Payment method</p>
@@ -64,7 +69,13 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
                     >
                       <span>Name: {item.name}</span>
                       <span>Quantity: {item.quantity}</span>
-                      <span>Price: ${item.price}</span>
+                      <span>
+                        Price:{" "}
+                        {new Intl.NumberFormat("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        }).format(item.price)}
+                      </span>
                     </li>
                   ))
                 : null}

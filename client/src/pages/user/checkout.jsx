@@ -5,13 +5,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import UserCartItemsContent from "@/components/user/cart-item";
-import {
-  capturePayment,
-  createOrder,
-  failedPayment,
-} from "@/store/shop/order-slice";
+import { createOrder, failedPayment } from "@/store/shop/order-slice";
 import { createTransaction } from "@/store/shop/transaction-slice";
-function ShoppingCheckout() {
+
+const ShoppingCheckout = () => {
   const { currentCart } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
@@ -31,7 +28,7 @@ function ShoppingCheckout() {
         )
       : 0;
 
-  function handleInitiatePaypalPayment() {
+  const handleInitiatePaypalPayment = () => {
     if (currentCart.length === 0) {
       toast({
         title: "Your cart is empty. Please add items to proceed",
@@ -84,17 +81,15 @@ function ShoppingCheckout() {
 
     dispatch(createOrder(orderData)).then((data) => {
       if (data?.payload?.transaction?.token) {
-        // dispatch(
-        //   createTransaction({
-        //     userId: data?.payload?.data?.userId,
-        //     orderId: data?.payload?.data?._id,
-        //     transactionToken: data?.payload?.transaction?.token,
-        //   })
-        // );
+        dispatch(
+          createTransaction({
+            userId: user._id,
+            orderId: data?.payload?.data?._id,
+            transactionToken: data?.payload?.transaction?.token,
+          })
+        );
         window.snap.pay(data?.payload?.transaction?.token, {
-          onSuccess: function () {
-            // dispatch(capturePayment(data?.payload?.data?._id));
-          },
+          onSuccess: function () {},
           onPending: function (result) {
             console.log("pending");
             console.log(result);
@@ -111,7 +106,7 @@ function ShoppingCheckout() {
         });
       }
     });
-  }
+  };
 
   useEffect(() => {
     const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
@@ -154,14 +149,14 @@ function ShoppingCheckout() {
           <div className="mt-4 w-full">
             <Button onClick={handleInitiatePaypalPayment} className="w-full">
               {isPaymentStart
-                ? "Processing Paypal Payment..."
-                : "Checkout with Paypal"}
+                ? "Processing Midtrans Payment..."
+                : "Checkout with Midtrans"}
             </Button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ShoppingCheckout;

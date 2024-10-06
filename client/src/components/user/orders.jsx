@@ -22,11 +22,29 @@ const ShoppingOrders = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const dispatch = useDispatch();
   const { orderList, orderDetails } = useSelector((state) => state.order);
+  const { transactionList } = useSelector((state) => state.transaction);
 
-  console.log(orderDetails);
+  console.log(orderList);
+  console.log(transactionList);
 
   const handleFetchOrderDetails = (getId) => {
     dispatch(getOrderDetails(getId));
+  };
+
+  const handlePaymentPrevTransaction = (token) => {
+    window.snap.pay(token, {
+      onSuccess: function () {},
+      onPending: function (result) {
+        console.log("pending");
+        console.log(result);
+      },
+      onError: function (result) {
+        console.log(result);
+      },
+      onClose: function () {
+        console.log("customer closed the popup without finishing the payment");
+      },
+    });
   };
 
   return (
@@ -65,8 +83,27 @@ const ShoppingOrders = () => {
                       >
                         {orderItem?.orderStatus}
                       </Badge>
+                      <span> </span>
+                      <Badge
+                        className={`py-1 px-3 ${
+                          orderItem?.paymentStatus === "paid"
+                            ? "bg-green-500"
+                            : ["cancel", "deny", "expire"].includes(
+                                orderItem?.paymentStatus
+                              )
+                            ? "bg-red-600"
+                            : "bg-black"
+                        }`}
+                      >
+                        {orderItem?.paymentStatus}
+                      </Badge>
                     </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
+                    <TableCell>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                      }).format(orderItem?.totalAmount)}
+                    </TableCell>
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}
@@ -83,6 +120,19 @@ const ShoppingOrders = () => {
                         >
                           View Details
                         </Button>
+                        {/* {orderItem?.paymentStatus === "unpaid" ? (
+                          <Button
+                            onClick={() => {
+                              handlePaymentPrevTransaction(
+                                transactionList.filter(
+                                  (trans) => trans.orderId == orderItem._id
+                                )?.[0].transactionToken
+                              );
+                            }}
+                          >
+                            Pay now
+                          </Button>
+                        ) : null} */}
                         <ShoppingOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>
                     </TableCell>
