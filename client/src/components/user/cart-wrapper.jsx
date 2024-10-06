@@ -4,7 +4,11 @@ import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-item";
 import proptypes from "prop-types";
 
-const UserCartWrapper = ({ currentCart, setOpenCartSheet }) => {
+const UserCartWrapper = ({
+  currentCart,
+  setOpenCartSheet,
+  setOpenSideMenuSheet,
+}) => {
   const navigate = useNavigate();
 
   const totalCartAmount =
@@ -42,6 +46,7 @@ const UserCartWrapper = ({ currentCart, setOpenCartSheet }) => {
         onClick={() => {
           navigate("/shop/checkout");
           setOpenCartSheet(false);
+          setOpenSideMenuSheet(false);
         }}
         className="w-full mt-6"
       >
@@ -54,6 +59,7 @@ const UserCartWrapper = ({ currentCart, setOpenCartSheet }) => {
 UserCartWrapper.propTypes = {
   currentCart: proptypes.array,
   setOpenCartSheet: proptypes.any,
+  setOpenSideMenuSheet: proptypes.any,
 };
 
 export default UserCartWrapper;

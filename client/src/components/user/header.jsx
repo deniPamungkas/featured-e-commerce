@@ -129,6 +129,7 @@ const HeaderRightContent = ({ setOpenSideMenuSheet }) => {
         </Button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
+          setOpenSideMenuSheet={setOpenSideMenuSheet}
           currentCart={
             currentCart && currentCart.items && currentCart.items.length > 0
               ? currentCart.items
