@@ -115,7 +115,6 @@ const HeaderRightContent = ({ setOpenSideMenuSheet }) => {
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
           onClick={() => {
-            setOpenSideMenuSheet ? setOpenSideMenuSheet(false) : null;
             setOpenCartSheet(true);
           }}
           variant="outline"
