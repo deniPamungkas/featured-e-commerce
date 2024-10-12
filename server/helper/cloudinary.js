@@ -38,7 +38,6 @@ export const imageDelete = async (publicId) => {
       resource_type: "auto",
     });
     if (result) {
-      console.log(result, "cloud");
       return result;
     }
   } catch (error) {

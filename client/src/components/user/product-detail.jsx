@@ -158,7 +158,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
             <DialogTitle className="text-3xl font-extrabold">
               {productDetails?.title}
             </DialogTitle>
-            <DialogDescription className="text-muted-foreground text-2xl mb-5 mt-4">
+            <DialogDescription className="text-muted-foreground mb-5 mt-4">
               {productDetails?.description}
             </DialogDescription>
           </DialogHeader>

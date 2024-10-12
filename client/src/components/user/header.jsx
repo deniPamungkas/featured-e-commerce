@@ -112,7 +112,11 @@ const HeaderRightContent = ({ setOpenSideMenuSheet }) => {
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
-      <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
+      <Sheet
+        className="overflow-scroll"
+        open={openCartSheet}
+        onOpenChange={() => setOpenCartSheet(false)}
+      >
         <Button
           onClick={() => {
             setOpenCartSheet(true);
