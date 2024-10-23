@@ -143,7 +143,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
       : 0;
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
+      <DialogContent className="grid grid-cols-3 gap-8 sm:p-8 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
         <div className="relative overflow-hidden rounded-lg">
           <img
             src={productDetails?.image}
@@ -152,8 +152,38 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
             height={600}
             className="aspect-square w-full object-cover"
           />
+          <Separator />
+          <h2 className="text-xl font-bold mb-4">Reviews</h2>
+          <div className="flex flex-col gap-y-4 h-[200px] overflow-y-scroll">
+            {reviews && reviews.length > 0 ? (
+              reviews.map((reviewItem) => (
+                <div key={reviewItem._id} className="flex gap-2 max-w-[250px]">
+                  <Avatar className="w-10 h-10 border">
+                    <AvatarFallback>
+                      {reviewItem?.userName?.[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid gap-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold">{reviewItem?.userName}</h3>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <StarRatingComponent rating={reviewItem?.reviewValue} />
+                    </div>
+                    <div className="max-w-[180px]">
+                      <p className="text-muted-foreground text-xs break-words whitespace-normal">
+                        {reviewItem.reviewMessage}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <h1>No Reviews</h1>
+            )}
+          </div>
         </div>
-        <div className="">
+        <div className="col-span-2">
           <DialogHeader>
             <DialogTitle className="text-3xl font-extrabold">
               {productDetails?.title}
@@ -205,33 +235,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           </div>
           <Separator />
           <div className="max-h-[300px] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Reviews</h2>
-            <div className="grid gap-6">
-              {reviews && reviews.length > 0 ? (
-                reviews.map((reviewItem) => (
-                  <div key={reviewItem._id} className="flex gap-4">
-                    <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        {reviewItem?.userName?.[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold">{reviewItem?.userName}</h3>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        <StarRatingComponent rating={reviewItem?.reviewValue} />
-                      </div>
-                      <p className="text-muted-foreground">
-                        {reviewItem.reviewMessage}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <h1>No Reviews</h1>
-              )}
-            </div>
             <div className="mt-10 flex-col flex gap-2">
               <Label>Write a review</Label>
               <div className="flex gap-1">

@@ -10,7 +10,7 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <DialogContent className="sm:max-w-[600px]">
+    <DialogContent className="sm:max-w-[600px] h-[550px] overflow-y-scroll">
       <DialogTitle className="font-bold text-xl">Order Details</DialogTitle>
       <div className="grid gap-6">
         <div className="grid gap-2">
