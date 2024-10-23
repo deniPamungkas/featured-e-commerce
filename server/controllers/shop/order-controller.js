@@ -82,7 +82,7 @@ export const capturePayment = async (req, res) => {
     }
 
     order.paymentStatus = "paid";
-    order.orderStatus = "confirmed";
+    order.orderStatus = "pending";
 
     for (let item of order.cartItems) {
       let product = await ProductSchema.findById(item.id);
@@ -229,7 +229,7 @@ export const trxNotif = async (req, res) => {
       console.log({ order });
 
       order.paymentStatus = "paid";
-      order.orderStatus = "confirmed";
+      order.orderStatus = "pending";
 
       for (let item of order.cartItems) {
         let product = await ProductSchema.findById(item.id);
@@ -267,7 +267,7 @@ export const trxNotif = async (req, res) => {
     console.log({ order });
 
     order.paymentStatus = "paid";
-    order.orderStatus = "confirmed";
+    order.orderStatus = "pending";
 
     for (let item of order.cartItems) {
       let product = await ProductSchema.findById(item.id);

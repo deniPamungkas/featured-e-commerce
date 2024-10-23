@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DialogContent } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
@@ -6,38 +6,41 @@ import { Badge } from "../ui/badge";
 import { useDispatch, useSelector } from "react-redux";
 import Form from "../common/form";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import proptypes from "prop-types";
+import { getOrdersFromAllUsers, updateOrderStatus } from "@/store/order-slice";
+import { toast } from "@/hooks/use-toast";
 
-const initialFormData = {
-  status: "",
-};
-
-const AdminOrderDetailsView = ({ orderDetails }) => {
-  const [formData, setFormData] = useState(initialFormData);
+const AdminOrderDetailsView = ({ orderDetails, setOpenDetailsDialog }) => {
+  const [formData, setFormData] = useState({ status: null });
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  console.log(orderDetails, "orderDetailsorderDetails");
+  useEffect(() => {
+    if (orderDetails?.orderStatus) {
+      setFormData({ status: orderDetails?.orderStatus });
+    }
+  }, [orderDetails]);
 
-  //   function handleUpdateStatus(event) {
-  //     event.preventDefault();
-  //     const { status } = formData;
+  function handleUpdateStatus(event) {
+    event.preventDefault();
+    const { status } = formData;
 
-  //     dispatch(
-  //       updateOrderStatus({ id: orderDetails?._id, orderStatus: status })
-  //     ).then((data) => {
-  //       if (data?.payload?.success) {
-  //         dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-  //         dispatch(getAllOrdersForAdmin());
-  //         setFormData(initialFormData);
-  //         toast({
-  //           title: data?.payload?.message,
-  //         });
-  //       }
-  //     });
-  //   }
+    dispatch(
+      updateOrderStatus({ id: orderDetails?._id, orderStatus: status })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getOrdersFromAllUsers());
+        setFormData({ status: null });
+        toast({
+          title: data?.payload?.message,
+        });
+        setOpenDetailsDialog(false);
+      }
+    });
+  }
 
   return (
-    <DialogContent className="sm:max-w-[600px]">
+    <DialogContent className="sm:max-w-[600px] h-[500px] overflow-y-scroll">
       <DialogTitle className="text-xl font-bold">Order Details</DialogTitle>
       <div className="grid gap-6">
         <div className="grid gap-2">
@@ -66,8 +69,11 @@ const AdminOrderDetailsView = ({ orderDetails }) => {
             <Label>
               <Badge
                 className={`py-1 px-3 ${
-                  orderDetails?.orderStatus === "confirmed"
+                  orderDetails?.orderStatus === "delivered"
                     ? "bg-green-500"
+                    : orderDetails?.orderStatus === "inProcess" ||
+                      orderDetails?.orderStatus === "inShipping"
+                    ? "bg-yellow-500"
                     : orderDetails?.orderStatus === "rejected"
                     ? "bg-red-600"
                     : "bg-black"
@@ -137,12 +143,17 @@ const AdminOrderDetailsView = ({ orderDetails }) => {
             formData={formData}
             setFormData={setFormData}
             buttonText={"Update Order Status"}
-            // onSubmit={handleUpdateStatus}
+            onSubmit={handleUpdateStatus}
           />
         </div>
       </div>
     </DialogContent>
   );
+};
+
+AdminOrderDetailsView.propTypes = {
+  orderDetails: proptypes.any,
+  setOpenDetailsDialog: proptypes.any,
 };
 
 export default AdminOrderDetailsView;

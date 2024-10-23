@@ -46,9 +46,36 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
   "/admin-order/getOrderDetails",
   async (id, { rejectWithValue }) => {
     try {
-      const result = await axios.get(`${apiBaseUrl}/order/details/${id}`, {
-        withCredentials: true,
-      });
+      const result = await axios.get(
+        `${apiBaseUrl}/admin/order/details/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      return result?.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.response.data
+      );
+    }
+  }
+);
+
+export const updateOrderStatus = createAsyncThunk(
+  "/admin-order/updateOrderStatus",
+  async ({ id, orderStatus }, { rejectWithValue }) => {
+    console.log({ id, orderStatus });
+    try {
+      const result = await axios.patch(
+        `${apiBaseUrl}/admin/order/details/update/${id}`,
+        { orderStatus },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(result.data);
 
       return result?.data;
     } catch (error) {
@@ -94,6 +121,20 @@ const adminOrderSlice = createSlice({
       })
       .addCase(getOrderDetailsForAdmin.rejected, (state) => {
         console.log("rejected, getOrderDetailsForAdmin");
+        state.isLoadingOrder = false;
+        state.orderDetails = null;
+      })
+      .addCase(updateOrderStatus.pending, (state) => {
+        console.log("pending, updateOrderStatus");
+        state.isLoadingOrder = true;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        console.log("fulfilled, updateOrderStatus");
+        state.isLoadingOrder = false;
+        state.orderDetails = action.payload.data;
+      })
+      .addCase(updateOrderStatus.rejected, (state) => {
+        console.log("rejected, updateOrderStatus");
         state.isLoadingOrder = false;
         state.orderDetails = null;
       });

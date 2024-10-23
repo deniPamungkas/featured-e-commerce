@@ -64,9 +64,12 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
-    await OrderSchema.findByIdAndUpdate(id, { orderStatus });
+    const updatedOrder = await OrderSchema.findByIdAndUpdate(id, {
+      orderStatus,
+    });
 
     res.status(200).json({
+      data: updatedOrder,
       success: true,
       message: "Order status is updated successfully!",
     });

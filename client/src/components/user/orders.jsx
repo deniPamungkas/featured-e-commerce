@@ -31,21 +31,21 @@ const ShoppingOrders = () => {
     dispatch(getOrderDetails(getId));
   };
 
-  const handlePaymentPrevTransaction = (token) => {
-    window.snap.pay(token, {
-      onSuccess: function () {},
-      onPending: function (result) {
-        console.log("pending");
-        console.log(result);
-      },
-      onError: function (result) {
-        console.log(result);
-      },
-      onClose: function () {
-        console.log("customer closed the popup without finishing the payment");
-      },
-    });
-  };
+  // const handlePaymentPrevTransaction = (token) => {
+  //   window.snap.pay(token, {
+  //     onSuccess: function () {},
+  //     onPending: function (result) {
+  //       console.log("pending");
+  //       console.log(result);
+  //     },
+  //     onError: function (result) {
+  //       console.log(result);
+  //     },
+  //     onClose: function () {
+  //       console.log("customer closed the popup without finishing the payment");
+  //     },
+  //   });
+  // };
 
   return (
     <Card>
@@ -74,9 +74,12 @@ const ShoppingOrders = () => {
                     <TableCell>
                       <Badge
                         className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
+                          orderDetails?.orderStatus === "delivered"
                             ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
+                            : orderDetails?.orderStatus === "inProcess" ||
+                              orderDetails?.orderStatus === "inShipping"
+                            ? "bg-yellow-500"
+                            : orderDetails?.orderStatus === "rejected"
                             ? "bg-red-600"
                             : "bg-black"
                         }`}

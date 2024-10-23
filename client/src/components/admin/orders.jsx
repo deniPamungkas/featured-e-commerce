@@ -21,6 +21,7 @@ import { Badge } from "../ui/badge";
 import {
   getOrderDetailsForAdmin,
   getOrdersFromAllUsers,
+  setResetOrderDetails,
 } from "@/store/order-slice";
 import AdminOrderDetailsView from "./order-details";
 
@@ -36,10 +37,6 @@ const AdminOrdersView = () => {
   useEffect(() => {
     dispatch(getOrdersFromAllUsers());
   }, [dispatch]);
-
-  //   useEffect(() => {
-  //     if (orderDetails !== null) setOpenDetailsDialog(true);
-  //   }, [orderDetails]);
 
   return (
     <Card>
@@ -68,8 +65,11 @@ const AdminOrdersView = () => {
                     <TableCell>
                       <Badge
                         className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
+                          orderItem?.orderStatus === "delivered"
                             ? "bg-green-500"
+                            : orderItem?.orderStatus === "inProcess" ||
+                              orderItem?.orderStatus === "inShipping"
+                            ? "bg-yellow-500"
                             : orderItem?.orderStatus === "rejected"
                             ? "bg-red-600"
                             : "bg-black"
@@ -80,27 +80,30 @@ const AdminOrdersView = () => {
                     </TableCell>
                     <TableCell>${orderItem?.totalAmount}</TableCell>
                     <TableCell>
-                      <Dialog
-                        open={openDetailsDialog}
-                        onOpenChange={() => {
-                          setOpenDetailsDialog(false);
-                          //   dispatch(resetOrderDetails());
+                      <Button
+                        onClick={() => {
+                          handleFetchOrderDetails(orderItem?._id);
+                          setOpenDetailsDialog(true);
                         }}
                       >
-                        <Button
-                          onClick={() => {
-                            handleFetchOrderDetails(orderItem?._id);
-                            setOpenDetailsDialog(true);
-                          }}
-                        >
-                          View Details
-                        </Button>
-                        <AdminOrderDetailsView orderDetails={orderDetails} />
-                      </Dialog>
+                        View Details
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
               : null}
+            <Dialog
+              open={openDetailsDialog}
+              onOpenChange={() => {
+                setOpenDetailsDialog(false);
+                dispatch(setResetOrderDetails());
+              }}
+            >
+              <AdminOrderDetailsView
+                orderDetails={orderDetails}
+                setOpenDetailsDialog={setOpenDetailsDialog}
+              />
+            </Dialog>
           </TableBody>
         </Table>
       </CardContent>
