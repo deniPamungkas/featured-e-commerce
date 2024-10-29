@@ -1,4 +1,3 @@
-import AdminProductCard from "@/components/admin/product-card";
 import Form from "@/components/common/form";
 import { SkeletonCard } from "@/components/common/skeleton-card";
 import { Button } from "@/components/ui/button";
@@ -20,8 +19,12 @@ import {
 } from "@/store/product-slice";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { useRef, useState } from "react";
+import { lazy, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+const AdminProductCard = lazy(() =>
+  import("../../components/admin/product-card")
+);
 
 const AdminProducts = () => {
   const initialFormData = useFormik({
