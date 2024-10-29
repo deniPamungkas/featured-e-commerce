@@ -19,7 +19,8 @@ import {
 } from "@/store/product-slice";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { lazy, useRef, useState } from "react";
+import { Loader } from "lucide-react";
+import { lazy, Suspense, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const AdminProductCard = lazy(() =>
@@ -143,14 +144,16 @@ const AdminProducts = () => {
           {fetchAllProduct?.data?.payload ? (
             fetchAllProduct?.data?.payload?.data.map((product) => {
               return (
-                <AdminProductCard
-                  key={product.title}
-                  product={product}
-                  handleDelete={handleDeleteProduct}
-                  setOpenSideDashboard={setOpenSideDashboard}
-                  setFormData={initialFormData.setValues}
-                  setCurrentEditedId={setCurrentEditedId}
-                />
+                <Suspense fallback={<Loader />} key={product.title}>
+                  <AdminProductCard
+                    key={product.title}
+                    product={product}
+                    handleDelete={handleDeleteProduct}
+                    setOpenSideDashboard={setOpenSideDashboard}
+                    setFormData={initialFormData.setValues}
+                    setCurrentEditedId={setCurrentEditedId}
+                  />
+                </Suspense>
               );
             })
           ) : (
