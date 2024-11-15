@@ -27,6 +27,10 @@ import {
 import { toast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/user/product-detail";
 import { getFeatureImages } from "@/store/common-slice";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+AOS.init();
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -161,19 +165,25 @@ const ShoppingHome = () => {
             Shop by category
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categoriesWithIcon.map((categoryItem) => (
-              <Card
+            {categoriesWithIcon.map((categoryItem, index) => (
+              <div
                 key={categoryItem.label}
-                onClick={() =>
-                  handleNavigateToListingPage(categoryItem, "category")
-                }
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                data-aos="fade-up"
+                data-aos-once={true}
+                data-aos-delay={index * 200}
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{categoryItem.label}</span>
-                </CardContent>
-              </Card>
+                <Card
+                  onClick={() =>
+                    handleNavigateToListingPage(categoryItem, "category")
+                  }
+                  className="cursor-pointer hover:shadow-lg transition-shadow"
+                >
+                  <CardContent className="flex flex-col items-center justify-center p-6">
+                    <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
+                    <span className="font-bold">{categoryItem.label}</span>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
@@ -183,17 +193,25 @@ const ShoppingHome = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {brandsWithIcon.map((brandItem) => (
-              <Card
+            {brandsWithIcon.map((brandItem, index) => (
+              <div
                 key={brandItem.label}
-                onClick={() => handleNavigateToListingPage(brandItem, "brand")}
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                data-aos="fade-up"
+                data-aos-once={true}
+                data-aos-delay={index * 200}
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{brandItem.label}</span>
-                </CardContent>
-              </Card>
+                <Card
+                  onClick={() =>
+                    handleNavigateToListingPage(brandItem, "brand")
+                  }
+                  className="cursor-pointer hover:shadow-lg transition-shadow"
+                >
+                  <CardContent className="flex flex-col items-center justify-center p-6">
+                    <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
+                    <span className="font-bold">{brandItem.label}</span>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
@@ -206,13 +224,19 @@ const ShoppingHome = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {productList && productList.length > 0
-              ? productList.map((productItem) => (
-                  <ShoppingProductCard
+              ? productList.map((productItem, index) => (
+                  <div
                     key={productItem.title}
-                    handleGetProductDetails={handleGetProductDetails}
-                    product={productItem}
-                    handleAddtoCart={handleAddtoCart}
-                  />
+                    data-aos="fade-up"
+                    data-aos-once={true}
+                    data-aos-delay={(index / 4) * 200}
+                  >
+                    <ShoppingProductCard
+                      handleGetProductDetails={handleGetProductDetails}
+                      product={productItem}
+                      handleAddtoCart={handleAddtoCart}
+                    />
+                  </div>
                 ))
               : null}
           </div>

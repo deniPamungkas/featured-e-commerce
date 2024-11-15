@@ -21,6 +21,10 @@ import { ArrowUpDownIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+AOS.init();
 
 const UserListing = () => {
   const { productList, isLoading, productDetails } = useSelector(
@@ -193,13 +197,20 @@ const UserListing = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
             {productList && productList.length > 0
-              ? productList.map((productItem) => (
-                  <ShoppingProductCard
+              ? productList.map((productItem, index) => (
+                  <div
                     key={productItem.title}
-                    handleGetProductDetails={handleGetProductDetails}
-                    product={productItem}
-                    handleAddtoCart={handleAddtoCart}
-                  />
+                    data-aos="fade-up"
+                    data-aos-delay={(index / 4) * 200}
+                    data-aos-once={true}
+                    data-aos-duration={500}
+                  >
+                    <ShoppingProductCard
+                      handleGetProductDetails={handleGetProductDetails}
+                      product={productItem}
+                      handleAddtoCart={handleAddtoCart}
+                    />
+                  </div>
                 ))
               : null}
           </div>
