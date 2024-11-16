@@ -76,4 +76,5 @@ npm install
 ```bash
 npm start
 ```
-
+## API Documentation
+https://web.postman.co/workspace/f73fee78-4072-4c7f-8c64-6a111b9aebf9/overview
